@@ -1,7 +1,7 @@
-package Models;
+package models;
 
-import Data.ProgressTask;
-import Data.TypeTask;
+import data.ProgressTask;
+import data.TypeTask;
 
 import java.util.Objects;
 
