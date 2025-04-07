@@ -1,48 +1,43 @@
 package models;
 
 import data.ProgressTask;
-import data.TypeTask;
 
 import java.util.Objects;
 
 public class Task {
     public Integer id;
-    public String name;
-    public String taskInfo;
-    private ProgressTask status = ProgressTask.NEW;
-    private final TypeTask type;
-    //
-    public Task (String name, int id, TypeTask type) {
-        this.id = id;
+    protected String name;
+    protected String taskInfo;
+    protected ProgressTask status = ProgressTask.NEW;
+
+    public Task (String name) {
         this.name = name;
-        this.type = type;
-    }
-    /// ///
-    public Task(String name, int id, String text, TypeTask type) {
-        this.id = id;
-        this.name = name;
-        this.taskInfo = text;
-        this.type = type;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Task task = (Task) o;
-        return Objects.equals(id, task.id) && type == task.type;
+    public Task (String name, String taskInfo) {
+        this.name = name;
+        this.taskInfo = taskInfo;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, type);
+    public Task (Integer id) {
+        this.id = id;
+    }
+
+    public Task (String name, ProgressTask status, Integer id, String taskInfo) {
+        this.name = name;
+        this.status = status;
+        this.id = id;
+        this.taskInfo = taskInfo;
     }
 
     @Override
     public String toString() {
-        return  "ID задачи = " + id + " {" +
-                "name='" + name +
+        return "Task{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", taskInfo='" + taskInfo + '\'' +
                 ", status=" + status +
-                "}\n";
+                '}';
     }
 
     public ProgressTask getStatus() {
@@ -53,7 +48,15 @@ public class Task {
         this.status = status;
     }
 
-    public TypeTask getType() {
-        return type;
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return Objects.equals(id, task.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
