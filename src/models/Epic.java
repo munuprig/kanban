@@ -3,43 +3,43 @@ package models;
 import data.ProgressTask;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 
 public class Epic extends Task{
-    private final ArrayList<SubTask> subTasks = new ArrayList<>();
+    // решил сделать Map так как проще искать старый эпик
+    private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
 
     public Epic (String name, String taskInfo){
         super(name, taskInfo);
     }
 
-    public ArrayList<SubTask> getSubTask() {
-        return subTasks;
+    public Collection<SubTask> getSubTask() {
+        return subTasks.values();
     }
 
     public void addSubTask(SubTask subTask){
-        subTasks.add(subTask);
+        subTasks.put(subTask.getId(), subTask);
+        updateStatusEpic();
     }
 
     public void deleteSubTasks(){
         subTasks.clear();
+        updateStatusEpic();
     }
 
     public void deleteSubTask(SubTask subTask){
-        subTasks.remove(subTask);
+        subTasks.remove(subTask.getId());
+        updateStatusEpic();
     }
 
-    public boolean updateSubTask(SubTask subTask){
-        for (SubTask oldSubTask: subTasks){
-            if(oldSubTask.equals(subTask)){
-                subTasks.remove(oldSubTask);
-                subTasks.add(subTask);
-                updateStatusEpic();
-                return true;
-            }
-        }
-        return false;
+    public void updateSubTask(SubTask subTask){
+        // переделал обновление subTasks
+        subTasks.put(subTask.getId(), subTask);
+        updateStatusEpic();
     }
 
-    public void updateStatusEpic(){
+    private void updateStatusEpic(){
         int checkDone = 0;
         int checkInProgress = 0;
 
@@ -47,7 +47,7 @@ public class Epic extends Task{
             status = ProgressTask.NEW;
             return;
         }
-        for (SubTask subTask: subTasks){
+        for (SubTask subTask: subTasks.values()){
             if(ProgressTask.DONE.equals(subTask.getStatus())){
                 checkDone+= 1;
             } else if (ProgressTask.IN_PROGRESS.equals(subTask.getStatus())) {
@@ -70,7 +70,7 @@ public class Epic extends Task{
                 "subTasks=" + subTasks +
                 ", id=" + id +
                 ", name='" + name + '\'' +
-                ", taskInfo='" + taskInfo + '\'' +
+                ", taskInfo='" + info + '\'' +
                 ", status=" + status +
                 "}\n";
     }

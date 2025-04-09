@@ -40,7 +40,7 @@ public class Main {
                 "Переделать программу"));
 
         manager.updateSubTask(new SubTask("adad", ProgressTask.IN_PROGRESS, 3,
-                "dadad"));
+                "dadad", idFirstEpic));
 
         //Печатаем
         print();
@@ -54,7 +54,7 @@ public class Main {
 
         //Удаляем всё
         manager.deleteTask();
-        manager.deleteEpic();
+        manager.deleteSubTask();
 
         //Печатаем
         print();
