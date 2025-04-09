@@ -3,13 +3,19 @@ package models;
 import data.ProgressTask;
 
 public class SubTask extends Task{
+    private Integer idEpic;
 
-    public SubTask (String name, String taskInfo){
+    public SubTask (String name, String taskInfo, Integer idEpic){
         super(name, taskInfo);
+        this.idEpic = idEpic;
     }
 
     public SubTask (String name, ProgressTask status, Integer id, String taskInfo){
         super(name, status, id, taskInfo);
+    }
+
+    public Integer getIdEpic() {
+        return idEpic;
     }
 
     @Override

@@ -2,39 +2,41 @@ import data.ProgressTask;
 import models.Epic;
 import models.SubTask;
 import models.Task;
-import workClass.Manager;
+import manager.Manager;
 
 public class Main {
     static Manager manager = new Manager();
 
     public static void main(String[] args) {
         //Добавляем задачи
-        System.out.println("Задача добавлена под id = " + manager.addNewTask(new Task("Доделать 4 спринт",
-                "Переделать программу")));
+        int idTask = manager.addNewTask(new Task("Доделать 4 спринт", "Переделать программу"));
+        System.out.println("Задача добавлена под id = " + idTask);
         System.out.println("Задача добавлена под id = " + manager.addNewTask(new Task("Начать 5 спринт",
                 "Завершить финальную задачу 5 спринта")));
 
         //Добавляем Epic 1
-        System.out.println("Epic добавлен под id = " + manager.addNewEpic(new Epic("Epic 1")));
+        int idFirstEpic = manager.addNewEpic(new Epic("Epic 1", "ыыаы"));
+        System.out.println("Epic добавлен под id = " + idFirstEpic);
         System.out.println("Подзадача добавлен под id = " + manager.addNewSubTask(new SubTask("adad",
-                        "dadad"), 2));
+                "dadad", idFirstEpic)));
         System.out.println("Подзадача добавлен под id = " + manager.addNewSubTask(new SubTask("adadaad",
-                "dad"), 2));
+                "dad", idFirstEpic)));
 
         //Добавляем Epic 2
-        System.out.println("Epic добавлен под id = " + manager.addNewEpic(new Epic("Epic 2")));
+        int idSecondEpic = manager.addNewEpic(new Epic("Epic 2", "фвфв"));
+        System.out.println("Epic добавлен под id = " + idSecondEpic);
         System.out.println("Подзадача добавлен под id = " + manager.addNewSubTask(new SubTask("ad",
-                "nuljklj"), 5));
+                "nuljklj", idSecondEpic)));
 
         //Печатаем
         print();
 
         //Печать подзадач эпиков
-        System.out.println(manager.getEpicSubTasks(2));
-        System.out.println(manager.getEpicSubTasks(5));
+        System.out.println(manager.getEpicSubTasks(idFirstEpic));
+        System.out.println(manager.getEpicSubTasks(idSecondEpic));
 
         //Изменяем
-        manager.updateTask(new Task("Доделать 4 спринт", ProgressTask.IN_PROGRESS, 0,
+        manager.updateTask(new Task("Доделать 4 спринт", ProgressTask.IN_PROGRESS, idTask,
                 "Переделать программу"));
 
         manager.updateSubTask(new SubTask("adad", ProgressTask.IN_PROGRESS, 3,
@@ -44,8 +46,8 @@ public class Main {
         print();
 
         //Удаляем
-        manager.deleteTask(1);
-        manager.deleteEpic(5);
+        manager.deleteTask(idTask);
+        manager.deleteEpic(idSecondEpic);
 
         //Печатаем
         print();
@@ -53,12 +55,14 @@ public class Main {
         //Удаляем всё
         manager.deleteTask();
         manager.deleteEpic();
-        manager.deleteTask();
+
+        //Печатаем
+        print();
     }
 
     protected static void print(){
-        System.out.println(manager.getTasks());
-        System.out.println(manager.getEpics());
-        System.out.println(manager.getSubTasks());
+        System.out.println("Все задачи :\n" + manager.getTasks());
+        System.out.println("Все Epic :\n" + manager.getEpics());
+        System.out.println("Все подзадачи :\n" + manager.getSubTasks());
     }
 }

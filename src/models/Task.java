@@ -5,22 +5,14 @@ import data.ProgressTask;
 import java.util.Objects;
 
 public class Task {
-    public Integer id;
+    protected Integer id;
     protected String name;
     protected String taskInfo;
     protected ProgressTask status = ProgressTask.NEW;
 
-    public Task (String name) {
-        this.name = name;
-    }
-
     public Task (String name, String taskInfo) {
         this.name = name;
         this.taskInfo = taskInfo;
-    }
-
-    public Task (Integer id) {
-        this.id = id;
     }
 
     public Task (String name, ProgressTask status, Integer id, String taskInfo) {
@@ -58,5 +50,13 @@ public class Task {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }
