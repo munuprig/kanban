@@ -2,6 +2,7 @@ package tests;
 
 import interfaces.HistoryManager;
 import manager.Managers;
+import models.Epic;
 import models.Task;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,13 @@ class InMemoryHistoryManagerTest {
     @BeforeAll
     static void addHistory() {
         historyManager.addHistory(task);
+
         final List<Task> history = historyManager.getHistory();
+        final Task savedTask = history.getLast();
+
+        assertNotNull(savedTask, "Задача не найдена.");
+        assertEquals(task, savedTask, "Задачи не совпадают.");
+
         assertNotNull(history, "После добавления задачи, история не должна быть пустой.");
         assertEquals(1, history.size(), "После добавления задачи, история не должна быть пустой.");
     }

@@ -5,28 +5,30 @@ import models.*;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, Epic> epics = new HashMap<>();
     private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
     private int id = 0;
+    public HistoryManager defaultHistory = Managers.getDefaultHistory();
 
     @Override
     public Task getTask(int id){
-        Managers.getDefaultHistory().addHistory(tasks.get(id));
+        defaultHistory.addHistory(tasks.get(id));
         return tasks.get(id);
     }
 
     @Override
     public SubTask getSubTask(int id){
-        Managers.getDefaultHistory().addHistory(subTasks.get(id));
+        defaultHistory.addHistory(subTasks.get(id));
         return subTasks.get(id);
     }
 
     @Override
     public Epic getEpic(int id){
-        Managers.getDefaultHistory().addHistory(epics.get(id));
+        defaultHistory.addHistory(epics.get(id));
         return epics.get(id);
     }
 
@@ -159,6 +161,10 @@ public class InMemoryTaskManager implements TaskManager {
         System.out.println("Все подзадачи удалены");
     }
 
+    @Override
+    public List<Task> getHistory() {
+        return defaultHistory.getHistory();
+    }
 
 
 }

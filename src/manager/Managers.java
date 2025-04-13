@@ -4,12 +4,10 @@ import interfaces.HistoryManager;
 import interfaces.TaskManager;
 
 public abstract class Managers {
-
-    private static final HistoryManager defaultHistory = new InMemoryHistoryManager();
     private static final TaskManager defaultTaskManager = new InMemoryTaskManager();
 
     public static HistoryManager getDefaultHistory(){
-        return defaultHistory;
+        return new InMemoryHistoryManager();
     }
 
     public static TaskManager getDefault(){

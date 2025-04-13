@@ -7,6 +7,7 @@ import models.SubTask;
 import models.Task;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
@@ -79,24 +80,24 @@ class InMemoryTaskManagerTest {
         assertEquals(1, subTasks.size(), "Неверное количество подзадач.");
     }
 
-    @BeforeAll
-    static void addNewTask() {
+    @BeforeEach
+    void addNewTask() {
         final Task savedTask = inMemoryTaskManager.getTask(taskId);
 
         assertNotNull(savedTask, "Задача не найдена.");
         assertEquals(task, savedTask, "Задачи не совпадают.");
     }
 
-    @BeforeAll
-    static void addNewEpic() {
+    @BeforeEach
+    void addNewEpic() {
         final Epic savedEpic = inMemoryTaskManager.getEpic(epicId);
 
         assertNotNull(savedEpic, "Epic не найдена.");
         assertEquals(epic, savedEpic, "Epic не совпадают.");
     }
 
-    @BeforeAll
-    static void addNewSubTask() {
+    @BeforeEach
+    void addNewSubTask() {
         final SubTask savedSubTask = inMemoryTaskManager.getSubTask(subTaskId);
 
         assertNotNull(savedSubTask, "Подзадача не найдена.");

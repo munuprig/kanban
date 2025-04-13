@@ -47,7 +47,7 @@ public class Main {
         //Печатаем
         print();
 
-        printAllTasks(inMemoryTaskManager, Managers.getDefaultHistory());
+        printAllTasks(inMemoryTaskManager);
 
         //Удаляем
         inMemoryTaskManager.deleteTask(idTask);
@@ -70,7 +70,7 @@ public class Main {
         System.out.println("Все подзадачи :\n" + inMemoryTaskManager.getSubTasks());
     }
 
-    private static void printAllTasks(TaskManager manager, HistoryManager historyManager) {
+    private static void printAllTasks(TaskManager manager) {
         System.out.println("Задачи:");
         for (Task task : manager.getTasks()) {
             System.out.println(task);
@@ -89,7 +89,7 @@ public class Main {
         }
 
         System.out.println("История:");
-        for (Task task : historyManager.getHistory()) {
+        for (Task task : manager.getHistory()) {
             System.out.println(task);
         }
     }

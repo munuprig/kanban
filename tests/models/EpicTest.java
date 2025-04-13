@@ -2,6 +2,7 @@ package tests;
 
 import models.Epic;
 import models.SubTask;
+import models.Task;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -16,20 +17,31 @@ class EpicTest {
     private static final SubTask subTask = new SubTask("Test", "Test", 0);
 
     @Test
+    void testEquals() {
+        Task epic1 = new Epic("Test1", "test1");
+        Task epic2 = new Epic("Test2", "test2");
+
+        epic1.setId(0);
+        epic2.setId(0);
+
+        assertEquals(epic1, epic2, "Разные задачи");
+    }
+
+    @Test
     void getSubTask() {
         final Collection<SubTask> savedTasks= epic.getSubTask();
         assertNotNull(savedTasks, "Подзадача не найдена.");
     }
 
-    @BeforeAll
-    static void addSubTask() {
+    @Test
+    void addSubTask() {
         subTask.setId(1);
         epic.addSubTask(subTask);
         assertEquals(1, epic.getSubTask().size(), "Неверное количество задач.");
     }
 
-    @AfterAll
-    static void deleteSubTasks() {
+    @Test
+    void deleteSubTasks() {
         final Collection<SubTask> oldSubTasks= epic.getSubTask();
 
         epic.deleteSubTasks();
