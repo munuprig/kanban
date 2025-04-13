@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.HashMap;
 
 public class Epic extends Task{
-    // решил сделать Map так как проще искать старый эпик
     private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
 
     public Epic (String name, String taskInfo){
@@ -34,7 +33,6 @@ public class Epic extends Task{
     }
 
     public void updateSubTask(SubTask subTask){
-        // переделал обновление subTasks
         subTasks.put(subTask.getId(), subTask);
         updateStatusEpic();
     }
