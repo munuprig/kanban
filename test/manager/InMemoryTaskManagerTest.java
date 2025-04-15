@@ -1,31 +1,28 @@
-package tests;
+package manager;
 
 import interfaces.TaskManager;
 import manager.Managers;
 import models.Epic;
 import models.SubTask;
 import models.Task;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest {
-    private final static TaskManager inMemoryTaskManager = Managers.getDefault();
-    private final static Task task = new Task("Test addNewTask", "Test addNewTask description");
-    private final static Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
-    static final int epicId = inMemoryTaskManager.addNewEpic(epic);
-    static final int taskId = inMemoryTaskManager.addNewTask(task);
-    private static final SubTask subTask = new SubTask("Test addNewTask",
-            "Test addNewTask description", epicId);
-    static final int subTaskId = inMemoryTaskManager.addNewSubTask(subTask);
+    private TaskManager inMemoryTaskManager;
+
+    @BeforeEach
+    void initInMemoryTaskManager(){
+        inMemoryTaskManager = Managers.getDefault();
+    }
 
     @Test
     void getTask() {
+        final Task task = new Task("Test addNewTask", "Test addNewTask description");
+        final int taskId = inMemoryTaskManager.addNewTask(task);
         final Task savedTask = inMemoryTaskManager.getTask(taskId);
 
         assertNotNull(savedTask, "Задача не найдена.");
@@ -33,13 +30,20 @@ class InMemoryTaskManagerTest {
 
     @Test
     void getSubTask() {
-        final Task savedTask = inMemoryTaskManager.getSubTask(subTaskId);
+        final Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
+        final int epicId = inMemoryTaskManager.addNewEpic(epic);
+        final SubTask subTask = new SubTask("Test addNewTask",
+                "Test addNewTask description", epicId);
+        final int subTaskId = inMemoryTaskManager.addNewSubTask(subTask);
+        final Task savedSubTask = inMemoryTaskManager.getSubTask(subTaskId);
 
-        assertNotNull(savedTask, "Подзадача не найдена.");
+        assertNotNull(savedSubTask, "Подзадача не найдена.");
     }
 
     @Test
     void getEpic() {
+        final Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
+        final int epicId = inMemoryTaskManager.addNewEpic(epic);
         final Epic savedEpic = inMemoryTaskManager.getEpic(epicId);
 
         assertNotNull(savedEpic, "Epic не найден.");
@@ -47,6 +51,10 @@ class InMemoryTaskManagerTest {
 
     @Test
     void getTasks() {
+        final Task task = new Task("Test addNewTask", "Test addNewTask description");
+
+        inMemoryTaskManager.addNewTask(task);
+
         final Collection<Task> tasks = inMemoryTaskManager.getTasks();
 
         assertNotNull(tasks, "Задачи не возвращаются.");
@@ -56,6 +64,13 @@ class InMemoryTaskManagerTest {
 
     @Test
     void getSubTasks() {
+        final Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
+        final int epicId = inMemoryTaskManager.addNewEpic(epic);
+        final SubTask subTask = new SubTask("Test addNewTask",
+                "Test addNewTask description", epicId);
+
+        inMemoryTaskManager.addNewSubTask(subTask);
+
         final Collection<SubTask> subTasks = inMemoryTaskManager.getSubTasks();
 
         assertNotNull(subTasks, "Подзадачи не возвращаются.");
@@ -65,6 +80,10 @@ class InMemoryTaskManagerTest {
 
     @Test
     void getEpics() {
+        final Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
+
+        inMemoryTaskManager.addNewEpic(epic);
+
         final Collection<Epic> epics = inMemoryTaskManager.getEpics();
 
         assertNotNull(epics, "Epic не возвращаются.");
@@ -74,38 +93,62 @@ class InMemoryTaskManagerTest {
 
     @Test
     void getEpicSubTasks() {
+        final Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
+        final int epicId = inMemoryTaskManager.addNewEpic(epic);
+        final SubTask subTask = new SubTask("Test addNewTask",
+                "Test addNewTask description", epicId);
+
+        inMemoryTaskManager.addNewSubTask(subTask);
+
         final Collection<SubTask> subTasks = inMemoryTaskManager.getEpicSubTasks(epicId);
 
         assertNotNull(subTasks, "Подзадачи не возвращаются.");
         assertEquals(1, subTasks.size(), "Неверное количество подзадач.");
     }
 
-    @BeforeEach
+    @Test
     void addNewTask() {
+        final Task task = new Task("Test addNewTask", "Test addNewTask description");
+        final int taskId = inMemoryTaskManager.addNewTask(task);
         final Task savedTask = inMemoryTaskManager.getTask(taskId);
 
         assertNotNull(savedTask, "Задача не найдена.");
         assertEquals(task, savedTask, "Задачи не совпадают.");
     }
 
-    @BeforeEach
+    @Test
     void addNewEpic() {
+        final Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
+        final int epicId = inMemoryTaskManager.addNewEpic(epic);
         final Epic savedEpic = inMemoryTaskManager.getEpic(epicId);
 
         assertNotNull(savedEpic, "Epic не найдена.");
         assertEquals(epic, savedEpic, "Epic не совпадают.");
     }
 
-    @BeforeEach
+    @Test
     void addNewSubTask() {
+        final Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
+        final int epicId = inMemoryTaskManager.addNewEpic(epic);
+        final SubTask subTask = new SubTask("Test addNewTask",
+                "Test addNewTask description", epicId);
+        final int subTaskId = inMemoryTaskManager.addNewSubTask(subTask);
         final SubTask savedSubTask = inMemoryTaskManager.getSubTask(subTaskId);
 
         assertNotNull(savedSubTask, "Подзадача не найдена.");
         assertEquals(subTask, savedSubTask, "Подзадачи не совпадают.");
     }
 
-    @AfterAll
-    static void deleteTest() {
+    @Test
+    void delete() {
+        final Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
+        final int epicId = inMemoryTaskManager.addNewEpic(epic);
+        final SubTask subTask = new SubTask("Test addNewTask",
+                "Test addNewTask description", epicId);
+        final Task task = new Task("Test addNewTask", "Test addNewTask description");
+
+        inMemoryTaskManager.addNewTask(task);
+        inMemoryTaskManager.addNewSubTask(subTask);
 
         final Collection<Task> oldTasks= inMemoryTaskManager.getTasks();
 

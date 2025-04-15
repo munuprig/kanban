@@ -1,12 +1,11 @@
-package tests;
+package models;
 
-import models.SubTask;
-import models.Task;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class SubTaskTest {
+
     @Test
     void testEquals() {
         Task subTask1 = new SubTask("Test1", "test1", 0);

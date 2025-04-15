@@ -1,10 +1,8 @@
-package tests;
+package manager;
 
 import interfaces.HistoryManager;
-import manager.Managers;
-import models.Epic;
 import models.Task;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -12,8 +10,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryHistoryManagerTest {
-    private static final HistoryManager historyManager = Managers.getDefaultHistory();
-    private static final Task task = new Task("dda", " adada");
+    private HistoryManager historyManager;
 
     @Test
     void getHistory() {
@@ -22,8 +19,10 @@ class InMemoryHistoryManagerTest {
         assertNotNull(history, "История не найдена.");
     }
 
-    @BeforeAll
-    static void addHistory() {
+    @Test
+    void addHistory() {
+        final Task task = new Task("dda", " adada");
+
         historyManager.addHistory(task);
 
         final List<Task> history = historyManager.getHistory();
@@ -36,4 +35,8 @@ class InMemoryHistoryManagerTest {
         assertEquals(1, history.size(), "После добавления задачи, история не должна быть пустой.");
     }
 
+    @BeforeEach
+    void initHistoryManager(){
+        historyManager = Managers.getDefaultHistory();
+    }
 }
