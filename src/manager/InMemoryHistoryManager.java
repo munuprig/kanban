@@ -23,4 +23,10 @@ public class InMemoryHistoryManager implements HistoryManager {
             history.addLast(task);
         }
     }
+
+    @Override
+    public void remove(int id) {
+
+    }
+
 }
