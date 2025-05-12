@@ -10,12 +10,12 @@ public class Task {
     protected String info;
     protected ProgressTask status = ProgressTask.NEW;
 
-    public Task (String name, String info) {
+    public Task(String name, String info) {
         this.name = name;
         this.info = info;
     }
 
-    public Task (String name, ProgressTask status, Integer id, String info) {
+    public Task(String name, ProgressTask status, Integer id, String info) {
         this.name = name;
         this.status = status;
         this.id = id;

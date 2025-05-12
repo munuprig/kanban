@@ -27,7 +27,8 @@ public class Main {
 
         //Добавляем Epic 2
         int idSecondEpic = inMemoryTaskManager.addNewEpic(new Epic("Epic 2", "Tекст"));
-        System.out.println("Epic добавлен под id = " + idSecondEpic);;
+        System.out.println("Epic добавлен под id = " + idSecondEpic);
+        ;
 
         //Печатаем
         //print();
@@ -60,7 +61,7 @@ public class Main {
 
     }
 
-    protected static void print(){
+    protected static void print() {
         System.out.println("Все задачи :\n" + inMemoryTaskManager.getTasks());
         System.out.println("Все Epic :\n" + inMemoryTaskManager.getEpics());
         System.out.println("Все подзадачи :\n" + inMemoryTaskManager.getSubTasks());

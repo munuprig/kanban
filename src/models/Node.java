@@ -1,6 +1,6 @@
 package models;
 
-public class Node{
+public class Node {
     public Task task;
     public Node nextNode;
     public Node prevNode;

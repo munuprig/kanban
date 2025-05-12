@@ -15,7 +15,7 @@ class InMemoryTaskManagerTest {
     private TaskManager inMemoryTaskManager;
 
     @BeforeEach
-    void initInMemoryTaskManager(){
+    void initInMemoryTaskManager() {
         inMemoryTaskManager = Managers.getDefault();
     }
 
@@ -150,17 +150,17 @@ class InMemoryTaskManagerTest {
         inMemoryTaskManager.addNewTask(task);
         inMemoryTaskManager.addNewSubTask(subTask);
 
-        final Collection<Task> oldTasks= inMemoryTaskManager.getTasks();
+        final Collection<Task> oldTasks = inMemoryTaskManager.getTasks();
 
         inMemoryTaskManager.deleteTask();
-        assertEquals(oldTasks ,inMemoryTaskManager.getTasks(), "Задачи не удались.");
+        assertEquals(oldTasks, inMemoryTaskManager.getTasks(), "Задачи не удались.");
 
-        final Collection<Epic> oldEpics= inMemoryTaskManager.getEpics();
-        final Collection<SubTask> oldSubTasks= inMemoryTaskManager.getSubTasks();
+        final Collection<Epic> oldEpics = inMemoryTaskManager.getEpics();
+        final Collection<SubTask> oldSubTasks = inMemoryTaskManager.getSubTasks();
 
         inMemoryTaskManager.deleteEpic();
-        assertEquals(oldEpics ,inMemoryTaskManager.getEpics(), "Epic не удались.");
-        assertEquals(oldSubTasks ,inMemoryTaskManager.getSubTasks(), "Подзадачи не удались.");
+        assertEquals(oldEpics, inMemoryTaskManager.getEpics(), "Epic не удались.");
+        assertEquals(oldSubTasks, inMemoryTaskManager.getSubTasks(), "Подзадачи не удались.");
     }
 
 }

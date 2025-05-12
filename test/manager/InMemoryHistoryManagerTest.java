@@ -15,9 +15,9 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void getHistory() {
-        final Task task1 = new Task("1", ProgressTask.NEW, 0 , "1");
-        final Task task2 = new Task("2", ProgressTask.NEW, 1 , "1");
-        final Task task3 = new Task("3", ProgressTask.NEW, 2 , "1");
+        final Task task1 = new Task("1", ProgressTask.NEW, 0, "1");
+        final Task task2 = new Task("2", ProgressTask.NEW, 1, "1");
+        final Task task3 = new Task("3", ProgressTask.NEW, 2, "1");
 
         historyManager.addHistory(task1);
         historyManager.addHistory(task2);
@@ -28,9 +28,9 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void addHistory() {
-        final Task task1 = new Task("1", ProgressTask.NEW, 0 , "1");
-        final Task task2 = new Task("2", ProgressTask.NEW, 1 , "1");
-        final Task task3 = new Task("3", ProgressTask.NEW, 2 , "1");
+        final Task task1 = new Task("1", ProgressTask.NEW, 0, "1");
+        final Task task2 = new Task("2", ProgressTask.NEW, 1, "1");
+        final Task task3 = new Task("3", ProgressTask.NEW, 2, "1");
 
         historyManager.addHistory(task1);
         historyManager.addHistory(task2);
@@ -44,9 +44,9 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void remove() {
-        final Task task1 = new Task("1", ProgressTask.NEW, 0 , "1");
-        final Task task2 = new Task("2", ProgressTask.NEW, 1 , "1");
-        final Task task3 = new Task("3", ProgressTask.NEW, 2 , "1");
+        final Task task1 = new Task("1", ProgressTask.NEW, 0, "1");
+        final Task task2 = new Task("2", ProgressTask.NEW, 1, "1");
+        final Task task3 = new Task("3", ProgressTask.NEW, 2, "1");
 
         historyManager.addHistory(task1);
         historyManager.addHistory(task2);
@@ -61,7 +61,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @BeforeEach
-    void initHistoryManager(){
+    void initHistoryManager() {
         historyManager = Managers.getDefaultHistory();
     }
 }

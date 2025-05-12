@@ -2,15 +2,15 @@ package models;
 
 import data.ProgressTask;
 
-public class SubTask extends Task{
+public class SubTask extends Task {
     private final Integer idEpic;
 
-    public SubTask (String name, String taskInfo, Integer idEpic){
+    public SubTask(String name, String taskInfo, Integer idEpic) {
         super(name, taskInfo);
         this.idEpic = idEpic;
     }
 
-    public SubTask (String name, ProgressTask status, Integer id, String taskInfo, Integer idEpic){
+    public SubTask(String name, ProgressTask status, Integer id, String taskInfo, Integer idEpic) {
         super(name, status, id, taskInfo);
         this.idEpic = idEpic;
     }
