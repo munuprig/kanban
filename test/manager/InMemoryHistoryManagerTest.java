@@ -1,5 +1,6 @@
 package manager;
 
+import data.ProgressTask;
 import interfaces.HistoryManager;
 import models.Task;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,25 +15,50 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void getHistory() {
-        final List<Task> history = historyManager.getHistory();
+        final Task task1 = new Task("1", ProgressTask.NEW, 0 , "1");
+        final Task task2 = new Task("2", ProgressTask.NEW, 1 , "1");
+        final Task task3 = new Task("3", ProgressTask.NEW, 2 , "1");
 
-        assertNotNull(history, "История не найдена.");
+        historyManager.addHistory(task1);
+        historyManager.addHistory(task2);
+        historyManager.addHistory(task3);
+
+        assertNotNull(historyManager.getHistory(), "История не найдена.");
     }
 
     @Test
     void addHistory() {
-        final Task task = new Task("dda", " adada");
+        final Task task1 = new Task("1", ProgressTask.NEW, 0 , "1");
+        final Task task2 = new Task("2", ProgressTask.NEW, 1 , "1");
+        final Task task3 = new Task("3", ProgressTask.NEW, 2 , "1");
 
-        historyManager.addHistory(task);
+        historyManager.addHistory(task1);
+        historyManager.addHistory(task2);
+        historyManager.addHistory(task3);
 
-        final List<Task> history = historyManager.getHistory();
-        final Task savedTask = history.getLast();
+        List<Task> expected = List.of(task1, task2, task3);
 
-        assertNotNull(savedTask, "Задача не найдена.");
-        assertEquals(task, savedTask, "Задачи не совпадают.");
+        assertNotNull(historyManager.getHistory(), "После добавления задачи, история не должна быть пустой.");
+        assertEquals(expected, historyManager.getHistory(), "После добавления задачи, история не должна быть пустой.");
+    }
 
-        assertNotNull(history, "После добавления задачи, история не должна быть пустой.");
-        assertEquals(1, history.size(), "После добавления задачи, история не должна быть пустой.");
+    @Test
+    void remove() {
+        final HistoryLinkedList history = new HistoryLinkedList();
+        final Task task1 = new Task("1", ProgressTask.NEW, 0 , "1");
+        final Task task2 = new Task("2", ProgressTask.NEW, 1 , "1");
+        final Task task3 = new Task("3", ProgressTask.NEW, 2 , "1");
+
+        historyManager.addHistory(task1);
+        historyManager.addHistory(task2);
+        historyManager.addHistory(task3);
+
+        List<Task> oldHistory = history.getTasks();
+
+        historyManager.remove(1);
+
+        assertNotNull(historyManager.getHistory(), "Должны удалиться не все задачи.");
+        assertNotEquals(oldHistory, historyManager.getHistory(), "Задачи не удались.");
     }
 
     @BeforeEach
