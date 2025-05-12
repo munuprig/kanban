@@ -44,7 +44,6 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void remove() {
-        final HistoryLinkedList history = new HistoryLinkedList();
         final Task task1 = new Task("1", ProgressTask.NEW, 0 , "1");
         final Task task2 = new Task("2", ProgressTask.NEW, 1 , "1");
         final Task task3 = new Task("3", ProgressTask.NEW, 2 , "1");
@@ -53,7 +52,7 @@ class InMemoryHistoryManagerTest {
         historyManager.addHistory(task2);
         historyManager.addHistory(task3);
 
-        List<Task> oldHistory = history.getTasks();
+        List<Task> oldHistory = historyManager.getHistory();
 
         historyManager.remove(1);
 
