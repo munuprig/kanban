@@ -1,13 +1,14 @@
 package manager;
 
+import interfaces.HistoryManager;
 import interfaces.TaskManager;
-import manager.Managers;
 import models.Epic;
 import models.SubTask;
 import models.Task;
 import org.junit.jupiter.api.*;
 
 import java.util.Collection;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -141,26 +142,36 @@ class InMemoryTaskManagerTest {
 
     @Test
     void delete() {
-        final Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
+        final Epic epic = new Epic("1", "1");
         final int epicId = inMemoryTaskManager.addNewEpic(epic);
-        final SubTask subTask = new SubTask("Test addNewTask",
-                "Test addNewTask description", epicId);
-        final Task task = new Task("Test addNewTask", "Test addNewTask description");
+        final SubTask subTask = new SubTask("2", "2", epicId);
+        final Task task = new Task("3", "3");
 
         inMemoryTaskManager.addNewTask(task);
         inMemoryTaskManager.addNewSubTask(subTask);
 
+        inMemoryTaskManager.getEpic(epic.getId());
+        inMemoryTaskManager.getSubTask(subTask.getId());
+        inMemoryTaskManager.getTask(task.getId());
+
+
+        List<Task> oldHistory = inMemoryTaskManager.getHistory();
+
         final Collection<Task> oldTasks = inMemoryTaskManager.getTasks();
 
         inMemoryTaskManager.deleteTask();
+
         assertEquals(oldTasks, inMemoryTaskManager.getTasks(), "Задачи не удались.");
+        assertNotEquals(oldHistory, inMemoryTaskManager.getHistory(), "Задачи не удались из истории.");
 
         final Collection<Epic> oldEpics = inMemoryTaskManager.getEpics();
         final Collection<SubTask> oldSubTasks = inMemoryTaskManager.getSubTasks();
+        oldHistory = inMemoryTaskManager.getHistory();
 
         inMemoryTaskManager.deleteEpic();
         assertEquals(oldEpics, inMemoryTaskManager.getEpics(), "Epic не удались.");
         assertEquals(oldSubTasks, inMemoryTaskManager.getSubTasks(), "Подзадачи не удались.");
+        assertNotEquals(oldHistory ,inMemoryTaskManager.getHistory(), "Должны удалиться все задачи.");
     }
 
 }
