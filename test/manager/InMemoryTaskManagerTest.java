@@ -171,7 +171,7 @@ class InMemoryTaskManagerTest {
         inMemoryTaskManager.deleteEpic();
         assertEquals(oldEpics, inMemoryTaskManager.getEpics(), "Epic не удались.");
         assertEquals(oldSubTasks, inMemoryTaskManager.getSubTasks(), "Подзадачи не удались.");
-        assertNotEquals(oldHistory ,inMemoryTaskManager.getHistory(), "Должны удалиться все задачи.");
+        assertNotEquals(oldHistory, inMemoryTaskManager.getHistory(), "Должны удалиться все задачи.");
     }
 
 }

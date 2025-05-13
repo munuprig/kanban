@@ -175,8 +175,8 @@ public class InMemoryTaskManager implements TaskManager {
         return defaultHistory.getHistory();
     }
 
-    private void deleteInHistory(Set<Integer> idSet){
-        for (Integer id : idSet){
+    private void deleteInHistory(Set<Integer> idSet) {
+        for (Integer id : idSet) {
             defaultHistory.remove(id);
         }
     }
