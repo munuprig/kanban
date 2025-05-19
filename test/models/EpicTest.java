@@ -28,7 +28,7 @@ class EpicTest {
         subTask.setId(1);
         epic.addSubTask(subTask);
 
-        final Collection<SubTask> savedSubTasks= epic.getSubTask();
+        final Collection<SubTask> savedSubTasks = epic.getSubTask();
 
         assertNotNull(savedSubTasks, "Подзадачи не найдена.");
     }
@@ -51,9 +51,9 @@ class EpicTest {
         subTask.setId(1);
         epic.addSubTask(subTask);
 
-        final Collection<SubTask> oldSubTasks= epic.getSubTask();
+        final Collection<SubTask> oldSubTasks = epic.getSubTask();
 
         epic.deleteSubTasks();
-        assertEquals(oldSubTasks ,epic.getSubTask(), "Подзадачи не удались.");
+        assertEquals(oldSubTasks, epic.getSubTask(), "Подзадачи не удались.");
     }
 }

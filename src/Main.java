@@ -1,5 +1,3 @@
-import data.ProgressTask;
-import interfaces.HistoryManager;
 import interfaces.TaskManager;
 import manager.Managers;
 import models.Epic;
@@ -11,60 +9,59 @@ public class Main {
 
     public static void main(String[] args) {
         //Добавляем задачи
-        int idTask = inMemoryTaskManager.addNewTask(new Task("Доделать 4 спринт", "Переделать программу"));
-        System.out.println("Задача добавлена под id = " + idTask);
-        System.out.println("Задача добавлена под id = " + inMemoryTaskManager.addNewTask(new Task("Начать 5 спринт",
-                "Завершить финальную задачу 5 спринта")));
+        int idFirstTask = inMemoryTaskManager.addNewTask(new Task("Задача 1", "Текст"));
+        int idSecondTask = inMemoryTaskManager.addNewTask(new Task("Задача 2", "Текст"));
+        System.out.println("Задача добавлена под id = " + idFirstTask);
+        System.out.println("Задача добавлена под id = " + idSecondTask);
 
         //Добавляем Epic 1
-        int idFirstEpic = inMemoryTaskManager.addNewEpic(new Epic("Epic 1", "ыыаы"));
+        int idFirstEpic = inMemoryTaskManager.addNewEpic(new Epic("Epic 1", "Текст"));
         System.out.println("Epic добавлен под id = " + idFirstEpic);
-        System.out.println("Подзадача добавлен под id = " + inMemoryTaskManager.addNewSubTask(new SubTask("adad",
-                "dadad", idFirstEpic)));
-        System.out.println("Подзадача добавлен под id = " + inMemoryTaskManager.addNewSubTask(new SubTask("adadaad",
-                "dad", idFirstEpic)));
+
+        int idFirstSubTask = inMemoryTaskManager.addNewSubTask(
+                new SubTask("Подзадача 1", "Текст", idFirstEpic));
+        int idSecondSubTask = inMemoryTaskManager.addNewSubTask(
+                new SubTask("Подзадача 2", "Текст", idFirstEpic));
+        System.out.println("Подзадача добавлен под id = " + idFirstSubTask);
+        System.out.println("Подзадача добавлен под id = " + idSecondSubTask);
 
         //Добавляем Epic 2
-        int idSecondEpic = inMemoryTaskManager.addNewEpic(new Epic("Epic 2", "фвфв"));
+        int idSecondEpic = inMemoryTaskManager.addNewEpic(new Epic("Epic 2", "Tекст"));
         System.out.println("Epic добавлен под id = " + idSecondEpic);
-        System.out.println("Подзадача добавлен под id = " + inMemoryTaskManager.addNewSubTask(new SubTask("ad",
-                "nuljklj", idSecondEpic)));
+        ;
 
         //Печатаем
-        print();
+        //print();
+        inMemoryTaskManager.getTask(idFirstTask);
+        inMemoryTaskManager.getEpic(idFirstEpic);
+        inMemoryTaskManager.getTask(idSecondTask);
+        inMemoryTaskManager.getSubTask(idSecondSubTask);
+        inMemoryTaskManager.getEpic(idSecondEpic);
+        inMemoryTaskManager.getTask(idFirstTask);
 
-        //Печать подзадач эпиков
-        System.out.println(inMemoryTaskManager.getEpicSubTasks(idFirstEpic));
-        System.out.println(inMemoryTaskManager.getEpicSubTasks(idSecondEpic));
-
-        //Изменяем
-        inMemoryTaskManager.updateTask(new Task("Доделать 4 спринт", ProgressTask.IN_PROGRESS, idTask,
-                "Переделать программу"));
-
-        inMemoryTaskManager.updateSubTask(new SubTask("adad", ProgressTask.IN_PROGRESS, 3,
-                "dadad", idFirstEpic));
-
-        //Печатаем
-        print();
 
         printAllTasks(inMemoryTaskManager);
 
-        //Удаляем
-        inMemoryTaskManager.deleteTask(idTask);
-        inMemoryTaskManager.deleteEpic(idSecondEpic);
+        inMemoryTaskManager.getSubTask(idSecondSubTask);
+        inMemoryTaskManager.getEpic(idSecondEpic);
+        inMemoryTaskManager.getTask(idFirstTask);
+        inMemoryTaskManager.getTask(idFirstTask);
+        inMemoryTaskManager.getEpic(idFirstEpic);
+        inMemoryTaskManager.getTask(idSecondTask);
 
-        //Печатаем
-        print();
+        printAllTasks(inMemoryTaskManager);
 
-        //Удаляем всё
-        inMemoryTaskManager.deleteTask();
-        inMemoryTaskManager.deleteEpic();
+        inMemoryTaskManager.deleteEpic(idFirstEpic);
 
-        //Печатаем
-        print();
+        printAllTasks(inMemoryTaskManager);
+
+        inMemoryTaskManager.deleteTask(idSecondTask);
+
+        printAllTasks(inMemoryTaskManager);
+
     }
 
-    protected static void print(){
+    protected static void print() {
         System.out.println("Все задачи :\n" + inMemoryTaskManager.getTasks());
         System.out.println("Все Epic :\n" + inMemoryTaskManager.getEpics());
         System.out.println("Все подзадачи :\n" + inMemoryTaskManager.getSubTasks());
@@ -87,7 +84,6 @@ public class Main {
         for (Task subtask : manager.getSubTasks()) {
             System.out.println(subtask);
         }
-
         System.out.println("История:");
         for (Task task : manager.getHistory()) {
             System.out.println(task);
