@@ -164,14 +164,9 @@ class InMemoryTaskManagerTest {
         assertEquals(oldTasks, inMemoryTaskManager.getTasks(), "Задачи не удались.");
         assertNotEquals(oldHistory, inMemoryTaskManager.getHistory(), "Задачи не удались из истории.");
 
-        final Collection<Epic> oldEpics = inMemoryTaskManager.getEpics();
-        final Collection<SubTask> oldSubTasks = inMemoryTaskManager.getSubTasks();
-        oldHistory = inMemoryTaskManager.getHistory();
-
         inMemoryTaskManager.deleteEpic();
-        assertEquals(oldEpics, inMemoryTaskManager.getEpics(), "Epic не удались.");
-        assertEquals(oldSubTasks, inMemoryTaskManager.getSubTasks(), "Подзадачи не удались.");
-        assertNotEquals(oldHistory, inMemoryTaskManager.getHistory(), "Должны удалиться все задачи.");
+        assertEquals(0, inMemoryTaskManager.getEpics().size(), "Epic не удались.");
+        assertEquals(0, inMemoryTaskManager.getHistory().size(), "Должны удалиться все задачи.");
     }
 
 }
