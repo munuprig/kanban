@@ -12,6 +12,10 @@ public class Epic extends Task {
         super(name, taskInfo);
     }
 
+    public Epic(String name, ProgressTask status, Integer id, String info) {
+        super(name, status, id, info);
+    }
+
     public Collection<SubTask> getSubTask() {
         return subTasks.values();
     }
@@ -63,7 +67,7 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "Epic{" +
+        return "EPIC{" +
                 "subTasks=" + subTasks +
                 ", id=" + id +
                 ", name='" + name + '\'' +
