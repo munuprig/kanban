@@ -93,12 +93,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
     }
 
-    private void save(){
+    private void save() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
             bw.write("id,type,name,status,description,epic\n");
 
             for (Task task : super.getTasks()) {
-                bw.write(toString(task,TypeTask.TASK));
+                bw.write(toString(task, TypeTask.TASK));
             }
 
             for (Epic epic : super.getEpics()) {
@@ -113,7 +113,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    private String toString(Task task, TypeTask typeTask){
+    private String toString(Task task, TypeTask typeTask) {
         StringBuilder sb = new StringBuilder();
 
         sb.append(task.getId())
@@ -130,38 +130,38 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             sb.append(',').append(((SubTask) task).getIdEpic());
         }
 
-         sb.append("\n");
+        sb.append("\n");
         return sb.toString();
     }
 
-    private Task fromString(String str){
+    private Task fromString(String str) {
         String[] stringTask = str.split(",");
 
         String name = stringTask[2];
         String taskInfo = stringTask[4];
 
         Task currentTask = null;
-        switch (TypeTask.valueOf(stringTask[1])){
-            case TASK -> currentTask = new Task(name,taskInfo);
-            case EPIC -> currentTask = new Epic(name,taskInfo);
-            case SUBTASK -> currentTask = new SubTask( name, taskInfo, Integer.parseInt(stringTask[5]));
+        switch (TypeTask.valueOf(stringTask[1])) {
+            case TASK -> currentTask = new Task(name, taskInfo);
+            case EPIC -> currentTask = new Epic(name, taskInfo);
+            case SUBTASK -> currentTask = new SubTask(name, taskInfo, Integer.parseInt(stringTask[5]));
         }
         return currentTask;
     }
 
-    public void loadFromFile(File file, TaskManager manager){
+    public void loadFromFile(File file, TaskManager manager) {
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             br.readLine();
 
             String line;
 
-            while((line = br.readLine()) != null){
+            while ((line = br.readLine()) != null) {
                 Task task = fromString(line);
 
-                if (task instanceof Epic){
+                if (task instanceof Epic) {
                     manager.addNewEpic((Epic) task);
-                } else if (task instanceof  SubTask) {
+                } else if (task instanceof SubTask) {
                     manager.addNewSubTask((SubTask) task);
                 } else if (task != null) {
                     manager.addNewTask(task);
