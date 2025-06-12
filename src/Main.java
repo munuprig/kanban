@@ -11,7 +11,7 @@ import java.io.IOException;
 public class Main {
     static TaskManager inMemoryTaskManager = Managers.getDefault();
 
-    public static void main(String[] args) {
+    public static void main(String[] args){
 //        //Добавляем задачи
 //        int idFirstTask = inMemoryTaskManager.addNewTask(new Task("Задача 1", "Текст"));
 //        int idSecondTask = inMemoryTaskManager.addNewTask(new Task("Задача 2", "Текст"));
@@ -78,24 +78,22 @@ public class Main {
         int idFirstEpic = fl.addNewEpic(new Epic("Epic 1", "Текст"));
         System.out.println("Epic добавлен под id = " + idFirstEpic);
 
-        int idFirstSubTask = fl.addNewSubTask(
-                new SubTask("Подзадача 1", "Текст", idFirstEpic));
-        int idSecondSubTask = fl.addNewSubTask(
-                new SubTask("Подзадача 2", "Текст", idFirstEpic));
+        fl.addNewSubTask(new SubTask("Подзадача 1", "Текст", idFirstEpic));
+        fl.addNewSubTask(new SubTask("Подзадача 2", "Текст", idFirstEpic));
 
         inMemoryTaskManager.deleteEpic();
         inMemoryTaskManager.deleteTask();
 
-        fl.loadFromFile(file);
+        fl.loadFromFile(file, inMemoryTaskManager);
 
         printAllTasks(inMemoryTaskManager);
     }
 
-    protected static void print() {
-        System.out.println("Все задачи :\n" + inMemoryTaskManager.getTasks());
-        System.out.println("Все Epic :\n" + inMemoryTaskManager.getEpics());
-        System.out.println("Все подзадачи :\n" + inMemoryTaskManager.getSubTasks());
-    }
+//    protected static void print() {
+//        System.out.println("Все задачи :\n" + inMemoryTaskManager.getTasks());
+//        System.out.println("Все Epic :\n" + inMemoryTaskManager.getEpics());
+//        System.out.println("Все подзадачи :\n" + inMemoryTaskManager.getSubTasks());
+//    }
 
     private static void printAllTasks(TaskManager manager) {
         System.out.println("Задачи:");
