@@ -11,7 +11,7 @@ import java.io.IOException;
 public class Main {
     static TaskManager inMemoryTaskManager = Managers.getDefault();
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
 //        //Добавляем задачи
 //        int idFirstTask = inMemoryTaskManager.addNewTask(new Task("Задача 1", "Текст"));
 //        int idSecondTask = inMemoryTaskManager.addNewTask(new Task("Задача 2", "Текст"));
@@ -66,7 +66,7 @@ public class Main {
 
         File file;
         try {
-             file = File.createTempFile("Temp",".csv");
+            file = File.createTempFile("Temp", ".csv");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
