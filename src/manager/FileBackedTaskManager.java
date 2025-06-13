@@ -77,19 +77,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void deleteTask() {
         super.deleteTask();
-        save();
+        //save();
     }
 
     @Override
     public void deleteEpic() {
         super.deleteEpic();
-        save();
+        //save();
     }
 
     @Override
     public void deleteSubTask() {
         super.deleteSubTask();
-        save();
+        //save();
     }
 
     private void save() {
@@ -100,11 +100,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             for (Task task : getTasks()) {
                 bw.write(toString(task, TypeTask.TASK));
             }
-
             for (Epic epic : getEpics()) {
                 bw.write(toString(epic, TypeTask.EPIC));
             }
-
             for (SubTask subtask : getSubTasks()) {
                 bw.write(toString(subtask, TypeTask.SUBTASK));
             }
@@ -162,18 +160,27 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             br.readLine();
 
             String line;
+            Integer restoredId = 0;
 
             while ((line = br.readLine()) != null) {
                 Task task = fromString(line);
 
                 if (task instanceof Epic) {
                     manager.epics.put(task.getId(), (Epic) task);
-                } else if (task instanceof SubTask) {
-                    manager.subTasks.put(task.getId(), (SubTask) task);
+                } else if (task instanceof SubTask subTask) {
+                    manager.getEpic(subTask.getIdEpic()).addSubTask(subTask);
+                    manager.subTasks.put(subTask.getId(), subTask);
                 } else if (task != null) {
                     manager.tasks.put(task.getId(), task);
                 }
+
+                assert task != null;
+                if(restoredId < task.getId()){
+                    restoredId = task.getId();
+                }
             }
+
+            manager.id = ++restoredId;
         } catch (IOException ex) {
             throw new ManagerSaveException("Ошибка при загрузке файла.", ex); // Собственное исключение
         }

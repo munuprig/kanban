@@ -18,7 +18,7 @@ public class FileBackedTaskManagerTest {
         File tempFile = File.createTempFile("tasks", ".csv"); // Временный файл
         FileBackedTaskManager manager = new FileBackedTaskManager(tempFile);
 
-        final Task task = new Task("1", ProgressTask.NEW, 0, "1");
+        final Task task = new Task("1", "1");
         final Epic epic = new Epic("2", "2");
 
         manager.addNewTask(task);
@@ -38,11 +38,13 @@ public class FileBackedTaskManagerTest {
         assertEquals("1", restoredManager.getTask(task.getId()).getName(), "Название задачи неверно");
         assertEquals("1", restoredManager.getTask(task.getId()).getInfo(), "Описание задачи неверно");
 
-        assertNotNull(restoredManager.getEpic(epic.getId()), "Обычная эпик не найдена");
+        assertNotNull(restoredManager.getEpic(epic.getId()), "Обычный эпик не найден");
         assertEquals(ProgressTask.NEW, restoredManager.getEpic(epic.getId()).getStatus(),
                 "Статус эпика неверен");
         assertEquals("2", restoredManager.getEpic(epic.getId()).getName(), "Название эпика неверно");
         assertEquals("2", restoredManager.getEpic(epic.getId()).getInfo(), "Описание эпика неверно");
+        assertEquals(epic.getSubTask().size(), restoredManager.getEpic(epic.getId()).getSubTask().size(),
+                "Подзадачи не были востоновлены");
 
         assertNotNull(restoredManager.getSubTask(subTask.getId()), "Обычная подзадача не найдена");
         assertEquals(ProgressTask.NEW, restoredManager.getSubTask(subTask.getId()).getStatus(),
@@ -53,6 +55,8 @@ public class FileBackedTaskManagerTest {
                 "Описание подзадачи неверно");
         assertEquals(epic.getId(),restoredManager.getSubTask(subTask.getId()).getIdEpic(),
                 "Идентификатор эпика подзадачи неверен");
+
+        assertEquals(manager.id, restoredManager.id, "Id неверен");
 
         tempFile.deleteOnExit();
     }
