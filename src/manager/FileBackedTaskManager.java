@@ -1,8 +1,8 @@
 package manager;
 
+import data.ProgressTask;
 import exceptions.ManagerSaveException;
 import data.TypeTask;
-import interfaces.TaskManager;
 import models.Epic;
 import models.SubTask;
 import models.Task;
@@ -11,7 +11,6 @@ import java.io.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
-
 
     public FileBackedTaskManager(File file) {
         super();
@@ -95,17 +94,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void save() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-            bw.write("id,type,name,status,description,epic\n");
+            final String header = "id,type,name,status,description,epic\n";
+            bw.write(header);
 
-            for (Task task : super.getTasks()) {
+            for (Task task : getTasks()) {
                 bw.write(toString(task, TypeTask.TASK));
             }
 
-            for (Epic epic : super.getEpics()) {
+            for (Epic epic : getEpics()) {
                 bw.write(toString(epic, TypeTask.EPIC));
             }
 
-            for (SubTask subtask : super.getSubTasks()) {
+            for (SubTask subtask : getSubTasks()) {
                 bw.write(toString(subtask, TypeTask.SUBTASK));
             }
         } catch (Exception ex) {
@@ -134,22 +134,29 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return sb.toString();
     }
 
-    private Task fromString(String str) {
+    private static Task fromString(String str) {
         String[] stringTask = str.split(",");
 
+        Integer id = Integer.valueOf(stringTask[0]);
         String name = stringTask[2];
-        String taskInfo = stringTask[4];
+        ProgressTask status = ProgressTask.valueOf(stringTask[3]);
+        String info = stringTask[4];
+        Integer idEpic = null;
+        if (TypeTask.valueOf(stringTask[1]) == TypeTask.SUBTASK) {
+            idEpic = Integer.valueOf(stringTask[5]);
+        }
 
         Task currentTask = null;
         switch (TypeTask.valueOf(stringTask[1])) {
-            case TASK -> currentTask = new Task(name, taskInfo);
-            case EPIC -> currentTask = new Epic(name, taskInfo);
-            case SUBTASK -> currentTask = new SubTask(name, taskInfo, Integer.parseInt(stringTask[5]));
+            case TASK -> currentTask = new Task(name, status, id, info);
+            case EPIC -> currentTask = new Epic(name, status, id, info);
+            case SUBTASK -> currentTask = new SubTask(name, status, id, info, idEpic);
         }
         return currentTask;
     }
 
-    public void loadFromFile(File file, TaskManager manager) {
+    public static FileBackedTaskManager loadFromFile(File file) {
+        FileBackedTaskManager manager = new FileBackedTaskManager(file);
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             br.readLine();
@@ -160,16 +167,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 Task task = fromString(line);
 
                 if (task instanceof Epic) {
-                    manager.addNewEpic((Epic) task);
+                    manager.epics.put(task.getId(), (Epic) task);
                 } else if (task instanceof SubTask) {
-                    manager.addNewSubTask((SubTask) task);
+                    manager.subTasks.put(task.getId(), (SubTask) task);
                 } else if (task != null) {
-                    manager.addNewTask(task);
+                    manager.tasks.put(task.getId(), task);
                 }
             }
         } catch (IOException ex) {
             throw new ManagerSaveException("Ошибка при загрузке файла.", ex); // Собственное исключение
         }
+        return manager;
     }
 }
 
