@@ -77,19 +77,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void deleteTask() {
         super.deleteTask();
-        //save();
+        save();
     }
 
     @Override
     public void deleteEpic() {
         super.deleteEpic();
-        //save();
+        save();
     }
 
     @Override
     public void deleteSubTask() {
         super.deleteSubTask();
-        //save();
+        save();
     }
 
     private void save() {
