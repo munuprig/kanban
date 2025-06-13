@@ -175,11 +175,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
 
                 assert task != null;
-                if(restoredId < task.getId()){
+                if (restoredId < task.getId()) {
                     restoredId = task.getId();
                 }
             }
 
+            //Id не будет равен максимальному так как прозойдет ошибак после добавления нового объекта,
+            // так как мы увеличавем id полсе добовления нового объекта
             manager.id = ++restoredId;
         } catch (IOException ex) {
             throw new ManagerSaveException("Ошибка при загрузке файла.", ex); // Собственное исключение
