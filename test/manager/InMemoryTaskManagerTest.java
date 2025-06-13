@@ -1,6 +1,5 @@
 package manager;
 
-import interfaces.HistoryManager;
 import interfaces.TaskManager;
 import models.Epic;
 import models.SubTask;
