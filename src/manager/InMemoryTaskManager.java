@@ -211,7 +211,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     private boolean checkForConflicts(List<Task> prioritizedTasks) {
         return IntStream.range(0, prioritizedTasks.size() - 1)
-                .anyMatch(i -> prioritizedTasks.get(i).getEndTime().
-                        isAfter(prioritizedTasks.get(i + 1).getStartTime()));
+                .anyMatch(i -> prioritizedTasks.get(i).getEndTime()
+                        .isAfter(prioritizedTasks.get(i + 1).getStartTime()));
     }
 }
