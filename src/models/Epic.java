@@ -2,11 +2,13 @@ package models;
 
 import data.ProgressTask;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 public class Epic extends Task {
-    private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
+    private final TreeMap<Integer, SubTask> subTasks = new TreeMap<>();
 
     public Epic(String name, String taskInfo) {
         super(name, taskInfo);
@@ -62,6 +64,10 @@ public class Epic extends Task {
             status = ProgressTask.IN_PROGRESS;
             System.out.println("Статус Epic " + id + " обновлен.");
         }
+    }
+
+    @Override
+    public void setEndTime() {
 
     }
 
