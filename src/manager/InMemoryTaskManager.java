@@ -73,7 +73,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (task.getStartTime() != null) {
             allTasksSort.add(task);
         }
-        if (checkForConflicts(getPrioritizedTasks())){
+        if (checkForConflicts(getPrioritizedTasks())) {
             System.out.println("Задача конфликтует по времени!");
             return null;
         }
@@ -95,7 +95,7 @@ public class InMemoryTaskManager implements TaskManager {
             if (subTask.getStartTime() != null) {
                 allTasksSort.add(subTask);
             }
-            if (checkForConflicts(getPrioritizedTasks())){
+            if (checkForConflicts(getPrioritizedTasks())) {
                 System.out.println("Задача конфликтует по времени!");
                 return null;
             }
@@ -111,7 +111,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateTask(Task task) {
         if (tasks.containsKey(task.getId())) {
-            if (checkForConflicts(getPrioritizedTasks())){
+            if (checkForConflicts(getPrioritizedTasks())) {
                 System.out.println("Задача конфликтует по времени!");
                 return;
             }
@@ -132,7 +132,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateSubTask(SubTask subTask) {
         if (epics.containsKey(subTask.getIdEpic()) && subTasks.containsKey(subTask.getId())) {
-            if (checkForConflicts(getPrioritizedTasks())){
+            if (checkForConflicts(getPrioritizedTasks())) {
                 System.out.println("Задача конфликтует по времени!");
                 return;
             }
