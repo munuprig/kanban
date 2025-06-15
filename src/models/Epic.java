@@ -71,11 +71,11 @@ public class Epic extends Task {
     }
 
     public void setStartTimeEpic() {
-        setStartTime(getSubTask().stream().
-                map(SubTask::getStartTime).
-                filter(Objects::nonNull).
-                min(LocalDateTime::compareTo).
-                orElse(null));
+        setStartTime(getSubTask().stream()
+                .map(SubTask::getStartTime)
+                .filter(Objects::nonNull)
+                .min(LocalDateTime::compareTo)
+                .orElse(null));
     }
 
     public void setDurationEpic() {
@@ -87,11 +87,11 @@ public class Epic extends Task {
 
     @Override
     public LocalDateTime getEndTime() {
-        return getSubTask().stream().
-                map(SubTask::getEndTime).
-                filter(Objects::nonNull).
-                max(LocalDateTime::compareTo).
-                orElse(null);
+        return getSubTask().stream()
+                .map(SubTask::getEndTime)
+                .filter(Objects::nonNull)
+                .max(LocalDateTime::compareTo)
+                .orElse(null);
     }
 
     @Override
