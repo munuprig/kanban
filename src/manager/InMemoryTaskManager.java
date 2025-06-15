@@ -3,10 +3,8 @@ package manager;
 import interfaces.*;
 import models.*;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.IntStream;
 
 public class InMemoryTaskManager implements TaskManager {
     protected final HashMap<Integer, Task> tasks = new HashMap<>();
@@ -14,6 +12,13 @@ public class InMemoryTaskManager implements TaskManager {
     protected final HashMap<Integer, SubTask> subTasks = new HashMap<>();
     protected int id = 0;
     private final HistoryManager defaultHistory = Managers.getDefaultHistory();
+    protected final Set<Task> allTasksSort = new TreeSet<>((t1, t2) -> {
+        if (t1.getStartTime() == null || t2.getStartTime() == null) {
+            throw new IllegalArgumentException("У задача не указано стартовое время");
+        }
+        return t1.getStartTime().compareTo(t2.getStartTime());
+    });
+
 
     @Override
     public Task getTask(int id) {
@@ -59,7 +64,19 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public int addNewTask(Task task) {
+    public List<Task> getPrioritizedTasks() {
+        return new ArrayList<>(allTasksSort);
+    }
+
+    @Override
+    public Integer addNewTask(Task task) {
+        if (task.getStartTime() != null) {
+            allTasksSort.add(task);
+        }
+        if (checkForConflicts(getPrioritizedTasks())) {
+            System.out.println("Задача конфликтует по времени!");
+            return null;
+        }
         task.setId(id);
         tasks.put(id, task);
         return id++;
@@ -73,8 +90,15 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public int addNewSubTask(SubTask subTask) {
+    public Integer addNewSubTask(SubTask subTask) {
         if (epics.containsKey(subTask.getIdEpic())) {
+            if (subTask.getStartTime() != null) {
+                allTasksSort.add(subTask);
+            }
+            if (checkForConflicts(getPrioritizedTasks())) {
+                System.out.println("Задача конфликтует по времени!");
+                return null;
+            }
             subTask.setId(id);
             subTasks.put(id, subTask);
             getEpic(subTask.getIdEpic()).addSubTask(subTask);
@@ -87,6 +111,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateTask(Task task) {
         if (tasks.containsKey(task.getId())) {
+            if (checkForConflicts(getPrioritizedTasks())) {
+                System.out.println("Задача конфликтует по времени!");
+                return;
+            }
             tasks.put(task.getId(), task);
             System.out.println("Задача под id " + task.getId() + " обновлена.");
         }
@@ -104,6 +132,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateSubTask(SubTask subTask) {
         if (epics.containsKey(subTask.getIdEpic()) && subTasks.containsKey(subTask.getId())) {
+            if (checkForConflicts(getPrioritizedTasks())) {
+                System.out.println("Задача конфликтует по времени!");
+                return;
+            }
             Epic epic = epics.get(subTask.getIdEpic());
             epic.updateSubTask(subTask);
             System.out.println("Подзадача под id " + subTask.getId() + " обновлен.");
@@ -123,10 +155,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteEpic(int id) {
         if (epics.containsKey(id)) {
-            for (SubTask subTask : getEpic(id).getSubTask()) {
+            getEpic(id).getSubTask().forEach(subTask -> {
                 subTasks.remove(subTask.getId());
                 defaultHistory.remove(subTask.getId());
-            }
+            });
             epics.remove(id);
             defaultHistory.remove(id);
             System.out.println("Epic id " + id + " - удален");
@@ -162,9 +194,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteSubTask() {
-        for (Epic epic : getEpics()) {
-            epic.deleteSubTasks();
-        }
+        getEpics().forEach(Epic::deleteSubTasks);
         deleteInHistory(subTasks.keySet());
         subTasks.clear();
         System.out.println("Все подзадачи удалены");
@@ -176,8 +206,12 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private void deleteInHistory(Set<Integer> idSet) {
-        for (Integer id : idSet) {
-            defaultHistory.remove(id);
-        }
+        idSet.forEach(defaultHistory::remove);
+    }
+
+    private boolean checkForConflicts(List<Task> prioritizedTasks) {
+        return IntStream.range(0, prioritizedTasks.size() - 1)
+                .anyMatch(i -> prioritizedTasks.get(i).getEndTime()
+                        .isAfter(prioritizedTasks.get(i + 1).getStartTime()));
     }
 }

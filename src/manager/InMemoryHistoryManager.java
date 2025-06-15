@@ -7,6 +7,8 @@ import models.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private final HistoryLinkedList history = new HistoryLinkedList();
@@ -64,13 +66,10 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
 
         public List<Task> getTasks() {
-            ArrayList<Task> result = new ArrayList<>();
             Node current = head;
-            while (current != null) {
-                result.add(current.task);
-                current = current.nextNode;
-            }
-            return result;
+            return new ArrayList<>(Stream.iterate(current, Objects::nonNull, node -> node.nextNode)
+                    .map(node -> node.task)
+                    .toList());
         }
 
         public void remove(int taskId) {

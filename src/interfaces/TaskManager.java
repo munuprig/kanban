@@ -22,11 +22,13 @@ public interface TaskManager {
 
     Collection<SubTask> getEpicSubTasks(int epicId);
 
-    int addNewTask(Task task);
+    List<Task> getPrioritizedTasks();
+
+    Integer addNewTask(Task task);
 
     int addNewEpic(Epic epic);
 
-    int addNewSubTask(SubTask subTask);
+    Integer addNewSubTask(SubTask subTask);
 
     void updateTask(Task task);
 

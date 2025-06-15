@@ -8,6 +8,8 @@ import models.SubTask;
 import models.Task;
 
 import java.io.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
@@ -18,7 +20,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public int addNewTask(Task task) {
+    public Integer addNewTask(Task task) {
         int id = super.addNewTask(task);
         save();
         return id;
@@ -32,7 +34,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public int addNewSubTask(SubTask subTask) {
+    public Integer addNewSubTask(SubTask subTask) {
         int id = super.addNewSubTask(subTask);
         save();
         return id;
@@ -94,7 +96,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void save() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-            final String header = "id,type,name,status,description,epic\n";
+            final String header = "id,type,name,status,description,startTime,duration,epic\n";
             bw.write(header);
 
             for (Task task : getTasks()) {
@@ -122,7 +124,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 .append(',')
                 .append(task.getStatus())
                 .append(',')
-                .append(task.getInfo());
+                .append(task.getInfo())
+                .append(',')
+                .append(task.getStartTime())
+                .append(',')
+                .append(task.getDuration());
 
         if (typeTask.equals(TypeTask.SUBTASK)) {
             sb.append(',').append(((SubTask) task).getIdEpic());
@@ -139,16 +145,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String name = stringTask[2];
         ProgressTask status = ProgressTask.valueOf(stringTask[3]);
         String info = stringTask[4];
+        LocalDateTime startTime = LocalDateTime.parse(stringTask[5]);
+        Duration duration = Duration.parse(stringTask[6]);
         Integer idEpic = null;
         if (TypeTask.valueOf(stringTask[1]) == TypeTask.SUBTASK) {
-            idEpic = Integer.valueOf(stringTask[5]);
+            idEpic = Integer.valueOf(stringTask[7]);
         }
 
         Task currentTask = null;
         switch (TypeTask.valueOf(stringTask[1])) {
-            case TASK -> currentTask = new Task(name, status, id, info);
+            case TASK -> currentTask = new Task(name, status, id, info, startTime, duration);
             case EPIC -> currentTask = new Epic(name, status, id, info);
-            case SUBTASK -> currentTask = new SubTask(name, status, id, info, idEpic);
+            case SUBTASK -> currentTask = new SubTask(name, status, id, info, startTime, duration, idEpic);
         }
         return currentTask;
     }
@@ -180,11 +188,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
             }
 
-            //Id не будет равен максимальному так как прозойдет ошибак после добавления нового объекта,
-            // так как мы увеличавем id полсе добовления нового объекта
             manager.id = ++restoredId;
         } catch (IOException ex) {
-            throw new ManagerSaveException("Ошибка при загрузке файла.", ex); // Собственное исключение
+            throw new ManagerSaveException("Ошибка при загрузке файла.", ex);
         }
         return manager;
     }
