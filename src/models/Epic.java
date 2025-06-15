@@ -2,13 +2,14 @@ package models;
 
 import data.ProgressTask;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.TreeMap;
+import java.util.Objects;
 
 public class Epic extends Task {
-    private final TreeMap<Integer, SubTask> subTasks = new TreeMap<>();
+    private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
 
     public Epic(String name, String taskInfo) {
         super(name, taskInfo);
@@ -25,6 +26,8 @@ public class Epic extends Task {
     public void addSubTask(SubTask subTask) {
         subTasks.put(subTask.getId(), subTask);
         updateStatusEpic();
+        setStartTimeEpic();
+        setDurationEpic();
     }
 
     public void deleteSubTasks() {
@@ -53,6 +56,7 @@ public class Epic extends Task {
         for (SubTask subTask : subTasks.values()) {
             if (ProgressTask.DONE.equals(subTask.getStatus())) {
                 checkDone += 1;
+                checkInProgress += 1;
             } else if (ProgressTask.IN_PROGRESS.equals(subTask.getStatus())) {
                 checkInProgress += 1;
             }
@@ -66,9 +70,28 @@ public class Epic extends Task {
         }
     }
 
-    @Override
-    public void setEndTime() {
+    public void setStartTimeEpic() {
+        setStartTime(getSubTask().stream().
+                map(SubTask::getStartTime).
+                filter(Objects::nonNull).
+                min(LocalDateTime::compareTo).
+                orElse(null));
+    }
 
+    public void setDurationEpic() {
+        setDuration(getSubTask().stream()
+                .map(SubTask::getDuration)
+                .filter(Objects::nonNull)
+                .reduce(Duration.ZERO, Duration::plus));
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return getSubTask().stream().
+                map(SubTask::getEndTime).
+                filter(Objects::nonNull).
+                max(LocalDateTime::compareTo).
+                orElse(null);
     }
 
     @Override

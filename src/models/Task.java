@@ -14,11 +14,27 @@ public class Task {
     protected ProgressTask status = ProgressTask.NEW;
     protected long duration;
     protected LocalDateTime startTime;
-    protected LocalDateTime endTime;
 
     public Task(String name, String info) {
         this.name = name;
         this.info = info;
+    }
+
+    public Task(String name, String info, LocalDateTime startTime, Duration duration) {
+        this.name = name;
+        this.info = info;
+        this.startTime = startTime;
+        setDuration(duration);
+    }
+
+    public Task(String name, ProgressTask status, Integer id, String info,
+                LocalDateTime startTime, Duration duration) {
+        this.name = name;
+        this.status = status;
+        this.id = id;
+        this.info = info;
+        this.startTime = startTime;
+        setDuration(duration);
     }
 
     public Task(String name, ProgressTask status, Integer id, String info) {
@@ -28,12 +44,8 @@ public class Task {
         this.info = info;
     }
 
-    public void setEndTime() {
-        this.endTime = startTime.plus(getDuration(duration));
-    }
-
     public LocalDateTime getEndTime() {
-        return endTime;
+        return startTime.plus(getDuration());
     }
 
     public LocalDateTime getStartTime() {
@@ -44,7 +56,7 @@ public class Task {
         this.startTime = startTime;
     }
 
-    public Duration getDuration(long duration) {
+    public Duration getDuration() {
         return Duration.of(this.duration, ChronoUnit.MINUTES);
     }
 
