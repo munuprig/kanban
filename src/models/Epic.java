@@ -70,7 +70,7 @@ public class Epic extends Task {
         }
     }
 
-    public void setStartTimeEpic() {
+    private void setStartTimeEpic() {
         setStartTime(getSubTask().stream()
                 .map(SubTask::getStartTime)
                 .filter(Objects::nonNull)
@@ -78,7 +78,7 @@ public class Epic extends Task {
                 .orElse(null));
     }
 
-    public void setDurationEpic() {
+    private void setDurationEpic() {
         setDuration(getSubTask().stream()
                 .map(SubTask::getDuration)
                 .filter(Objects::nonNull)
