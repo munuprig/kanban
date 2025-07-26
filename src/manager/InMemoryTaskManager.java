@@ -215,6 +215,10 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private boolean checkForConflicts(Task newTask, List<Task> prioritizedTasks) {
+        if (prioritizedTasks.isEmpty()) {
+            return false;
+        }
+
         return prioritizedTasks.stream()
                 .anyMatch(existingTask ->
                         existingTask.getStartTime().isBefore(newTask.getEndTime()) &&

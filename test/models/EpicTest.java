@@ -38,7 +38,9 @@ class EpicTest {
 
     @Test
     void getSubTask() {
-        final SubTask subTask = new SubTask("Test", "Test", 0);
+        final SubTask subTask = new SubTask("Test", "Test", LocalDateTime.of
+                (2024, 10, 1, 1, 40),
+                Duration.ofMinutes(30), 0);
 
         subTask.setId(1);
         epic.addSubTask(subTask);
@@ -50,7 +52,9 @@ class EpicTest {
 
     @Test
     void addSubTask() {
-        final SubTask subTask = new SubTask("Test", "Test", 0);
+        final SubTask subTask = new SubTask("Test", "Test", LocalDateTime.of
+                (2024, 10, 1, 1, 40),
+                Duration.ofMinutes(30), 0);
 
         subTask.setId(1);
         epic.addSubTask(subTask);
@@ -59,7 +63,9 @@ class EpicTest {
 
     @Test
     void deleteSubTasks() {
-        final SubTask subTask = new SubTask("Test", "Test", 0);
+        final SubTask subTask = new SubTask("Test", "Test", LocalDateTime.of
+                (2024, 10, 1, 1, 40),
+                Duration.ofMinutes(30), 0);
 
         subTask.setId(1);
         epic.addSubTask(subTask);
@@ -72,8 +78,12 @@ class EpicTest {
 
     @Test
     void allNewStatus() {
-        SubTask subTask1 = new SubTask("Task1", "Desc1", ProgressTask.NEW , epic.getId());
-        SubTask subTask2 = new SubTask("Task2", "Desc2", ProgressTask.NEW , epic.getId());
+        SubTask subTask1 = new SubTask("Task1", "Desc1", ProgressTask.NEW, LocalDateTime.of
+                (2024, 10, 1, 1, 40),
+                Duration.ofMinutes(30), epic.getId());
+        SubTask subTask2 = new SubTask("Task2", "Desc2", ProgressTask.NEW, LocalDateTime.of
+                (2024, 10, 1, 2, 40),
+                Duration.ofMinutes(30), epic.getId());
 
         epic.addSubTask(subTask1);
         epic.addSubTask(subTask2);
@@ -83,8 +93,12 @@ class EpicTest {
 
     @Test
     void allDoneStatus() {
-        SubTask subTask1 = new SubTask("Task1", "Desc1", ProgressTask.DONE , epic.getId());
-        SubTask subTask2 = new SubTask("Task2", "Desc2", ProgressTask.DONE , epic.getId());
+        SubTask subTask1 = new SubTask("Task1", "Desc1", ProgressTask.DONE, LocalDateTime.of
+                (2024, 10, 1, 1, 40),
+                Duration.ofMinutes(30), epic.getId());
+        SubTask subTask2 = new SubTask("Task2", "Desc2", ProgressTask.DONE, LocalDateTime.of
+                (2024, 10, 1, 2, 40),
+                Duration.ofMinutes(30), epic.getId());
 
         subTask1.setId(1);
         subTask2.setId(2);
@@ -96,8 +110,12 @@ class EpicTest {
 
     @Test
     void mixedStatuses() {
-        SubTask subTask1 = new SubTask("Task1", "Desc1", ProgressTask.NEW , epic.getId());
-        SubTask subTask2 = new SubTask("Task2", "Desc2", ProgressTask.DONE , epic.getId());
+        SubTask subTask1 = new SubTask("Task1", "Desc1", ProgressTask.NEW, LocalDateTime.of
+                (2024, 10, 1, 1, 40),
+                Duration.ofMinutes(30), epic.getId());
+        SubTask subTask2 = new SubTask("Task2", "Desc2", ProgressTask.DONE, LocalDateTime.of
+                (2024, 10, 1, 2, 40),
+                Duration.ofMinutes(30), epic.getId());
 
         subTask1.setId(1);
         subTask2.setId(2);
@@ -109,8 +127,12 @@ class EpicTest {
 
     @Test
     void inProgressStatus() {
-        SubTask subTask1 = new SubTask("Task1", "Desc1", ProgressTask.IN_PROGRESS , epic.getId());
-        SubTask subTask2 = new SubTask("Task2", "Desc2", ProgressTask.DONE , epic.getId());
+        SubTask subTask1 = new SubTask("Task1", "Desc1", ProgressTask.IN_PROGRESS, LocalDateTime.of
+                (2024, 10, 1, 1, 40),
+                Duration.ofMinutes(30), epic.getId());
+        SubTask subTask2 = new SubTask("Task2", "Desc2", ProgressTask.DONE, LocalDateTime.of
+                (2024, 10, 1, 2, 40),
+                Duration.ofMinutes(30), epic.getId());
 
         subTask1.setId(1);
         subTask2.setId(2);
@@ -121,7 +143,7 @@ class EpicTest {
     }
 
     @Test
-    void getSetTimeTest(){
+    void getSetTimeTest() {
         final SubTask subTask1 = new SubTask("3", "3", LocalDateTime.of
                 (2024, 10, 1, 9, 30),
                 Duration.ofMinutes(30), epic.getId());

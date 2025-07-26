@@ -97,6 +97,11 @@ public class Epic extends Task {
     }
 
     @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    @Override
     public String toString() {
         return "EPIC{" +
                 "subTasks=" + subTasks +

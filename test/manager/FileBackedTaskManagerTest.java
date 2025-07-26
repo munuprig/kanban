@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTaskManagerTest extends TaskManagerTest<TaskManager>{
+class FileBackedTaskManagerTest extends TaskManagerTest<TaskManager> {
     private File tempFile;
 
     @Override
@@ -38,15 +38,15 @@ class FileBackedTaskManagerTest extends TaskManagerTest<TaskManager>{
     }
 
     @Test
-    void testLoadAndSave(){
+    void testLoadAndSave() {
         FileBackedTaskManager manager = new FileBackedTaskManager(tempFile);
 
         Duration durationExpectedTask = Duration.ofMinutes(30);
         LocalDateTime localDateTimeExpectedTask = LocalDateTime.of
-                (2023, 10, 1, 9, 30);
+                (2023, 10, 1, 2, 0);
 
         final Task task = new Task("1", "1", LocalDateTime.of
-                (2023, 10, 1, 9, 30),
+                (2023, 10, 1, 2, 0),
                 Duration.ofMinutes(30));
         final Epic epic = new Epic("2", "2");
 
@@ -54,10 +54,10 @@ class FileBackedTaskManagerTest extends TaskManagerTest<TaskManager>{
 
         Duration durationExpected = Duration.ofMinutes(30);
         LocalDateTime localDateTimeExpected = LocalDateTime.of
-                (2024, 10, 1, 9, 30);
+                (2024, 10, 1, 2, 0);
         final int epicId = manager.addNewEpic(epic);
         final SubTask subTask = new SubTask("3", "3", LocalDateTime.of
-                (2024, 10, 1, 9, 30),
+                (2024, 10, 1, 2, 0),
                 Duration.ofMinutes(30), epicId);
 
         manager.addNewSubTask(subTask);
@@ -103,7 +103,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<TaskManager>{
                 "Название подзадачи неверно");
         assertEquals("3", restoredManager.getSubTask(subTask.getId()).getInfo(),
                 "Описание подзадачи неверно");
-        assertEquals(epic.getId(),restoredManager.getSubTask(subTask.getId()).getIdEpic(),
+        assertEquals(epic.getId(), restoredManager.getSubTask(subTask.getId()).getIdEpic(),
                 "Идентификатор эпика подзадачи неверен");
         assertEquals(restoredManager.getSubTask(subTask.getId()).getDuration(), durationExpected,
                 "Время выполнения задачи не правильно.");

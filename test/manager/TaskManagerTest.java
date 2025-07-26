@@ -7,13 +7,15 @@ import models.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-abstract class TaskManagerTest<T extends TaskManager>{
+abstract class TaskManagerTest<T extends TaskManager> {
     protected T taskManager;
 
     @BeforeEach
@@ -21,7 +23,7 @@ abstract class TaskManagerTest<T extends TaskManager>{
 
     @Test
     void getTask() {
-        final Task task = new Task("Test addNewTask", "Test addNewTask description");
+        final Task task = new Task("Task 1", "Test addNewTask description");
         final int taskId = taskManager.addNewTask(task);
         final Task savedTask = taskManager.getTask(taskId);
 
@@ -33,7 +35,9 @@ abstract class TaskManagerTest<T extends TaskManager>{
         final Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
         final int epicId = taskManager.addNewEpic(epic);
         final SubTask subTask = new SubTask("Test addNewTask",
-                "Test addNewTask description", epicId);
+                "Test addNewTask description", LocalDateTime.of
+                (2023, 10, 1, 1, 0),
+                Duration.ofMinutes(30), epicId);
         final int subTaskId = taskManager.addNewSubTask(subTask);
         final Task savedSubTask = taskManager.getSubTask(subTaskId);
 
@@ -67,7 +71,9 @@ abstract class TaskManagerTest<T extends TaskManager>{
         final Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
         final int epicId = taskManager.addNewEpic(epic);
         final SubTask subTask = new SubTask("Test addNewTask",
-                "Test addNewTask description", epicId);
+                "Test addNewTask description", LocalDateTime.of
+                (2023, 10, 1, 1, 0),
+                Duration.ofMinutes(30), epicId);
 
         taskManager.addNewSubTask(subTask);
 
@@ -96,7 +102,9 @@ abstract class TaskManagerTest<T extends TaskManager>{
         final Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
         final int epicId = taskManager.addNewEpic(epic);
         final SubTask subTask = new SubTask("Test addNewTask",
-                "Test addNewTask description", epicId);
+                "Test addNewTask description", LocalDateTime.of
+                (2023, 10, 1, 1, 0),
+                Duration.ofMinutes(30), epicId);
 
         taskManager.addNewSubTask(subTask);
 
@@ -131,7 +139,9 @@ abstract class TaskManagerTest<T extends TaskManager>{
         final Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
         final int epicId = taskManager.addNewEpic(epic);
         final SubTask subTask = new SubTask("Test addNewTask",
-                "Test addNewTask description", epicId);
+                "Test addNewTask description", LocalDateTime.of
+                (2023, 10, 1, 1, 0),
+                Duration.ofMinutes(30), epicId);
         final int subTaskId = taskManager.addNewSubTask(subTask);
         final SubTask savedSubTask = taskManager.getSubTask(subTaskId);
 
@@ -143,7 +153,9 @@ abstract class TaskManagerTest<T extends TaskManager>{
     void delete() {
         final Epic epic = new Epic("1", "1");
         final int epicId = taskManager.addNewEpic(epic);
-        final SubTask subTask = new SubTask("2", "2", epicId);
+        final SubTask subTask = new SubTask("2", "2", LocalDateTime.of
+                (2023, 10, 1, 1, 0),
+                Duration.ofMinutes(30), epicId);
         final Task task = new Task("3", "3");
 
         taskManager.addNewTask(task);
