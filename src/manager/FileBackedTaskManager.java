@@ -181,7 +181,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 } else if (task != null) {
                     manager.tasks.put(task.getId(), task);
                 }
-
+                manager.allTasksSort.add(task);
                 assert task != null;
                 if (restoredId < task.getId()) {
                     restoredId = task.getId();

@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class Epic extends Task {
+    protected LocalDateTime endTime;
+
     private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
 
     public Epic(String name, String taskInfo) {
@@ -28,6 +30,7 @@ public class Epic extends Task {
         updateStatusEpic();
         setStartTimeEpic();
         setDurationEpic();
+        setEndTimeEpic();
     }
 
     public void deleteSubTasks() {
@@ -85,9 +88,8 @@ public class Epic extends Task {
                 .reduce(Duration.ZERO, Duration::plus));
     }
 
-    @Override
-    public LocalDateTime getEndTime() {
-        return getSubTask().stream()
+    private void setEndTimeEpic() {
+        endTime = getSubTask().stream()
                 .map(SubTask::getEndTime)
                 .filter(Objects::nonNull)
                 .max(LocalDateTime::compareTo)

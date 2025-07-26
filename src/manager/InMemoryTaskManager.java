@@ -4,7 +4,6 @@ import interfaces.*;
 import models.*;
 
 import java.util.*;
-import java.util.stream.IntStream;
 
 public class InMemoryTaskManager implements TaskManager {
     protected final HashMap<Integer, Task> tasks = new HashMap<>();
@@ -70,12 +69,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Integer addNewTask(Task task) {
-        if (task.getStartTime() != null) {
-            allTasksSort.add(task);
-        }
-        if (checkForConflicts(getPrioritizedTasks())) {
+        if (checkForConflicts(task, getPrioritizedTasks())) {
             System.out.println("Задача конфликтует по времени!");
             return null;
+        }
+        if (task.getStartTime() != null) {
+            allTasksSort.add(task);
         }
         task.setId(id);
         tasks.put(id, task);
@@ -91,13 +90,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Integer addNewSubTask(SubTask subTask) {
+        if (checkForConflicts(subTask, getPrioritizedTasks())) {
+            System.out.println("Задача конфликтует по времени!");
+            return null;
+        }
         if (epics.containsKey(subTask.getIdEpic())) {
             if (subTask.getStartTime() != null) {
                 allTasksSort.add(subTask);
-            }
-            if (checkForConflicts(getPrioritizedTasks())) {
-                System.out.println("Задача конфликтует по времени!");
-                return null;
             }
             subTask.setId(id);
             subTasks.put(id, subTask);
@@ -110,8 +109,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(Task task) {
+        allTasksSort.remove(tasks.get(task.getId()));
         if (tasks.containsKey(task.getId())) {
-            if (checkForConflicts(getPrioritizedTasks())) {
+            if (checkForConflicts(task, getPrioritizedTasks())) {
                 System.out.println("Задача конфликтует по времени!");
                 return;
             }
@@ -131,8 +131,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateSubTask(SubTask subTask) {
+        allTasksSort.remove(tasks.get(subTask.getId()));
         if (epics.containsKey(subTask.getIdEpic()) && subTasks.containsKey(subTask.getId())) {
-            if (checkForConflicts(getPrioritizedTasks())) {
+            if (checkForConflicts(subTask, getPrioritizedTasks())) {
                 System.out.println("Задача конфликтует по времени!");
                 return;
             }
@@ -155,9 +156,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteEpic(int id) {
         if (epics.containsKey(id)) {
-            getEpic(id).getSubTask().forEach(subTask -> {
+            epics.get(id).getSubTask().forEach(subTask -> {
                 subTasks.remove(subTask.getId());
                 defaultHistory.remove(subTask.getId());
+                allTasksSort.remove(subTask);
             });
             epics.remove(id);
             defaultHistory.remove(id);
@@ -194,7 +196,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteSubTask() {
-        getEpics().forEach(Epic::deleteSubTasks);
+        getEpics().forEach( epic ->{
+            epic.deleteSubTasks();
+            epic.getSubTask().forEach(allTasksSort::remove);
+        });
         deleteInHistory(subTasks.keySet());
         subTasks.clear();
         System.out.println("Все подзадачи удалены");
@@ -209,9 +214,12 @@ public class InMemoryTaskManager implements TaskManager {
         idSet.forEach(defaultHistory::remove);
     }
 
-    private boolean checkForConflicts(List<Task> prioritizedTasks) {
-        return IntStream.range(0, prioritizedTasks.size() - 1)
-                .anyMatch(i -> prioritizedTasks.get(i).getEndTime()
-                        .isAfter(prioritizedTasks.get(i + 1).getStartTime()));
+    private boolean checkForConflicts(Task newTask, List<Task> prioritizedTasks) {
+        return prioritizedTasks.stream()
+                .anyMatch(existingTask ->
+                        existingTask.getStartTime().isBefore(newTask.getEndTime()) &&
+                                existingTask.getEndTime().isAfter(newTask.getStartTime())
+                );
     }
+
 }
