@@ -196,7 +196,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteSubTask() {
-        getEpics().forEach( epic ->{
+        getEpics().forEach(epic -> {
             epic.deleteSubTasks();
             epic.getSubTask().forEach(allTasksSort::remove);
         });
