@@ -24,11 +24,11 @@ public interface TaskManager {
 
     List<Task> getPrioritizedTasks();
 
-    Integer addNewTask(Task task);
+    int addNewTask(Task task);
 
     int addNewEpic(Epic epic);
 
-    Integer addNewSubTask(SubTask subTask);
+    int addNewSubTask(SubTask subTask);
 
     void updateTask(Task task);
 

@@ -20,7 +20,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Integer addNewTask(Task task) {
+    public int addNewTask(Task task) {
         int id = super.addNewTask(task);
         save();
         return id;
@@ -34,7 +34,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Integer addNewSubTask(SubTask subTask) {
+    public int addNewSubTask(SubTask subTask) {
         int id = super.addNewSubTask(subTask);
         save();
         return id;
@@ -176,7 +176,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 if (task instanceof Epic) {
                     manager.epics.put(task.getId(), (Epic) task);
                 } else if (task instanceof SubTask subTask) {
-                    manager.getEpic(subTask.getIdEpic()).addSubTask(subTask);
+                    manager.epics.get(subTask.getIdEpic()).addSubTask(subTask);
                     manager.subTasks.put(subTask.getId(), subTask);
                     manager.allTasksSort.add(task);
                 } else if (task != null) {

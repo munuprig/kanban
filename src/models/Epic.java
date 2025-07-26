@@ -36,16 +36,25 @@ public class Epic extends Task {
     public void deleteSubTasks() {
         subTasks.clear();
         updateStatusEpic();
+        setStartTimeEpic();
+        setDurationEpic();
+        setEndTimeEpic();
     }
 
     public void deleteSubTask(SubTask subTask) {
         subTasks.remove(subTask.getId());
         updateStatusEpic();
+        setStartTimeEpic();
+        setDurationEpic();
+        setEndTimeEpic();
     }
 
     public void updateSubTask(SubTask subTask) {
         subTasks.put(subTask.getId(), subTask);
         updateStatusEpic();
+        setStartTimeEpic();
+        setDurationEpic();
+        setEndTimeEpic();
     }
 
     private void updateStatusEpic() {

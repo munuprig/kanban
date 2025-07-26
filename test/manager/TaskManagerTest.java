@@ -156,7 +156,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
         final SubTask subTask = new SubTask("2", "2", LocalDateTime.of
                 (2023, 10, 1, 1, 0),
                 Duration.ofMinutes(30), epicId);
-        final Task task = new Task("3", "3");
+        final Task task = new Task("3", "3", LocalDateTime.of
+                (2024, 10, 1, 1, 0),
+                Duration.ofMinutes(30));
 
         taskManager.addNewTask(task);
         taskManager.addNewSubTask(subTask);
