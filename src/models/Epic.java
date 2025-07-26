@@ -2,10 +2,15 @@ package models;
 
 import data.ProgressTask;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Epic extends Task {
+    protected LocalDateTime endTime;
+
     private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
 
     public Epic(String name, String taskInfo) {
@@ -23,21 +28,33 @@ public class Epic extends Task {
     public void addSubTask(SubTask subTask) {
         subTasks.put(subTask.getId(), subTask);
         updateStatusEpic();
+        setStartTimeEpic();
+        setDurationEpic();
+        setEndTimeEpic();
     }
 
     public void deleteSubTasks() {
         subTasks.clear();
         updateStatusEpic();
+        setStartTimeEpic();
+        setDurationEpic();
+        setEndTimeEpic();
     }
 
     public void deleteSubTask(SubTask subTask) {
         subTasks.remove(subTask.getId());
         updateStatusEpic();
+        setStartTimeEpic();
+        setDurationEpic();
+        setEndTimeEpic();
     }
 
     public void updateSubTask(SubTask subTask) {
         subTasks.put(subTask.getId(), subTask);
         updateStatusEpic();
+        setStartTimeEpic();
+        setDurationEpic();
+        setEndTimeEpic();
     }
 
     private void updateStatusEpic() {
@@ -51,6 +68,7 @@ public class Epic extends Task {
         for (SubTask subTask : subTasks.values()) {
             if (ProgressTask.DONE.equals(subTask.getStatus())) {
                 checkDone += 1;
+                checkInProgress += 1;
             } else if (ProgressTask.IN_PROGRESS.equals(subTask.getStatus())) {
                 checkInProgress += 1;
             }
@@ -62,7 +80,34 @@ public class Epic extends Task {
             status = ProgressTask.IN_PROGRESS;
             System.out.println("Статус Epic " + id + " обновлен.");
         }
+    }
 
+    private void setStartTimeEpic() {
+        setStartTime(getSubTask().stream()
+                .map(SubTask::getStartTime)
+                .filter(Objects::nonNull)
+                .min(LocalDateTime::compareTo)
+                .orElse(null));
+    }
+
+    private void setDurationEpic() {
+        setDuration(getSubTask().stream()
+                .map(SubTask::getDuration)
+                .filter(Objects::nonNull)
+                .reduce(Duration.ZERO, Duration::plus));
+    }
+
+    private void setEndTimeEpic() {
+        endTime = getSubTask().stream()
+                .map(SubTask::getEndTime)
+                .filter(Objects::nonNull)
+                .max(LocalDateTime::compareTo)
+                .orElse(null);
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 
     @Override

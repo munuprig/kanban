@@ -2,6 +2,9 @@ package models;
 
 import data.ProgressTask;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 public class Task {
@@ -9,10 +12,29 @@ public class Task {
     protected String name;
     protected String info;
     protected ProgressTask status = ProgressTask.NEW;
+    protected long duration;
+    protected LocalDateTime startTime;
 
     public Task(String name, String info) {
         this.name = name;
         this.info = info;
+    }
+
+    public Task(String name, String info, LocalDateTime startTime, Duration duration) {
+        this.name = name;
+        this.info = info;
+        this.startTime = startTime;
+        setDuration(duration);
+    }
+
+    public Task(String name, ProgressTask status, Integer id, String info,
+                LocalDateTime startTime, Duration duration) {
+        this.name = name;
+        this.status = status;
+        this.id = id;
+        this.info = info;
+        this.startTime = startTime;
+        setDuration(duration);
     }
 
     public Task(String name, ProgressTask status, Integer id, String info) {
@@ -20,6 +42,26 @@ public class Task {
         this.status = status;
         this.id = id;
         this.info = info;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plus(getDuration());
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public Duration getDuration() {
+        return Duration.of(this.duration, ChronoUnit.MINUTES);
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration.toMinutes();
     }
 
     public ProgressTask getStatus() {
