@@ -15,8 +15,9 @@ public class SubTask extends Task {
 
     public SubTask(String name, String taskInfo, ProgressTask status, Integer idEpic) {
         super(name, taskInfo);
-        this.setStatus(status);
         this.idEpic = idEpic;
+        this.setStatus(status);
+
     }
 
     public SubTask(String name, ProgressTask status, Integer id, String info,
