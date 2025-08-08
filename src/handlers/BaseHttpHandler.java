@@ -13,9 +13,9 @@ public abstract class BaseHttpHandler implements HttpHandler {
     protected final TaskManager taskManager;
     protected final Gson gson;
 
-    public BaseHttpHandler(TaskManager taskManager) {
+    public BaseHttpHandler(TaskManager taskManager, Gson gson) {
         this.taskManager = taskManager;
-        this.gson = new Gson();
+        this.gson = gson;
     }
 
     public abstract void handle(HttpExchange exchange) throws IOException;

@@ -1,5 +1,6 @@
 package handlers;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import interfaces.TaskManager;
 import models.SubTask;
@@ -9,8 +10,8 @@ import java.util.Collection;
 
 public class SubtaskHandler extends BaseHttpHandler {
 
-    public SubtaskHandler(TaskManager taskManager) {
-        super(taskManager);
+    public SubtaskHandler(TaskManager taskManager, Gson gson) {
+        super(taskManager, gson);
     }
 
     @Override

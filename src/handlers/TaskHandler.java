@@ -1,5 +1,6 @@
 package handlers;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import interfaces.TaskManager;
 import models.Task;
@@ -9,8 +10,8 @@ import java.util.Collection;
 
 public class TaskHandler extends BaseHttpHandler {
 
-    public TaskHandler(TaskManager taskManager) {
-        super(taskManager);
+    public TaskHandler(TaskManager taskManager, Gson gson) {
+        super(taskManager, gson);
     }
 
     @Override
@@ -57,7 +58,7 @@ public class TaskHandler extends BaseHttpHandler {
         String requestBody = readRequestBody(exchange);
         Task task = gson.fromJson(requestBody, Task.class);
         taskManager.addNewTask(task);
-//        sendText(exchange, 201, gson.toJson(task));
+        sendText(exchange, 201, gson.toJson(task));
     }
 
     private void handleDeleteRequest(HttpExchange exchange) throws IOException {

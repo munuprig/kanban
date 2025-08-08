@@ -29,11 +29,11 @@ public class HttpTaskServer {
         System.out.println("Server started on port " + PORT);
 
         // Регистрируем обработчики для различных маршрутов
-        server.createContext("/tasks", new TaskHandler(taskManager));
-        server.createContext("/subtasks", new SubtaskHandler(taskManager));
-        server.createContext("/epics", new EpicHandler(taskManager));
-        server.createContext("/history", new HistoryHandler(taskManager));
-        server.createContext("/prioritized", new PrioritizedHandler(taskManager));
+        server.createContext("/tasks", new TaskHandler(taskManager, getGson()));
+        server.createContext("/subtasks", new SubtaskHandler(taskManager, getGson()));
+        server.createContext("/epics", new EpicHandler(taskManager, getGson()));
+        server.createContext("/history", new HistoryHandler(taskManager, getGson()));
+        server.createContext("/prioritized", new PrioritizedHandler(taskManager, getGson()));
 
         server.start();
     }

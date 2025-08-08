@@ -1,5 +1,6 @@
 package handlers;
 
+import com.google.gson.Gson;
 import interfaces.TaskManager;
 import models.Task;
 import com.sun.net.httpserver.HttpExchange;
@@ -8,8 +9,9 @@ import java.io.IOException;
 import java.util.List;
 
 public class HistoryHandler extends BaseHttpHandler {
-    public HistoryHandler(TaskManager taskManager) {
-        super(taskManager);
+
+    public HistoryHandler(TaskManager taskManager, Gson gson) {
+        super(taskManager, gson);
     }
 
     @Override
