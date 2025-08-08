@@ -67,7 +67,7 @@ public class TaskHandler extends BaseHttpHandler {
         if (parts.length == 3 && parts[1].equals("tasks")) {
             int taskId = Integer.parseInt((parts[2]));
             taskManager.deleteTask(taskId);
-            sendText(exchange, 204, "");
+            sendText(exchange, 200, "");
         } else {
             sendNotFound(exchange);
         }

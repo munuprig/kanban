@@ -20,7 +20,7 @@ public class PrioritizedHandler extends BaseHttpHandler {
         if ("GET".equals(requestMethod)) {
             handleGetRequest(exchange);
         } else {
-            exchange.sendResponseHeaders(405, -1); // Метод не поддерживается
+            exchange.sendResponseHeaders(405, -1);
         }
     }
 

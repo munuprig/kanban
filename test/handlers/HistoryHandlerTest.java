@@ -47,7 +47,7 @@ public class HistoryHandlerTest {
                 (2023, 10, 1, 1, 0),
                 Duration.ofMinutes(30));
         taskManager.addNewTask(task1);
-        String subtaskJson = gson.toJson(task1);
+        taskManager.getTask(task1.getId());
 
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/history");
@@ -60,6 +60,6 @@ public class HistoryHandlerTest {
         }.getType());
         assertNotNull(history);
         assertEquals(1, history.size());
-        assertEquals("Test Task", history.getFirst().getName());
+        assertEquals("1", history.getFirst().getName());
     }
 }

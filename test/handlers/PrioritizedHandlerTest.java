@@ -48,7 +48,7 @@ public class PrioritizedHandlerTest {
         taskManager.addNewTask(task1);
 
         HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create("http://localhost:8080/history");
+        URI url = URI.create("http://localhost:8080/prioritized");
         HttpRequest request = HttpRequest.newBuilder().uri(url).GET().build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -58,6 +58,6 @@ public class PrioritizedHandlerTest {
         }.getType());
         assertNotNull(prioritizedTasks);
         assertEquals(1, prioritizedTasks.size());
-        assertEquals("Test Task", prioritizedTasks.getFirst().getName());
+        assertEquals("1", prioritizedTasks.getFirst().getName());
     }
 }

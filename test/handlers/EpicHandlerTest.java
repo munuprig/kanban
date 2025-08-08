@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import interfaces.TaskManager;
 import manager.InMemoryTaskManager;
 import models.Epic;
+import models.SubTask;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,9 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,6 +44,7 @@ class EpicHandlerTest {
     @Test
     public void testAddEpic() throws IOException, InterruptedException {
         final Epic epic = new Epic("1", "1");
+
         String epicJson = gson.toJson(epic);
 
         HttpClient client = HttpClient.newHttpClient();
@@ -49,9 +54,9 @@ class EpicHandlerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(201, response.statusCode());
 
-        List<Epic> epics = (List<Epic>) taskManager.getEpics();
+        List<Epic> epics = new ArrayList<>(taskManager.getEpics());
         assertEquals(1, epics.size());
-        assertEquals("Test Epic", epics.getFirst().getName());
+        assertEquals("1", epics.getFirst().getName());
     }
 
     @Test
@@ -67,7 +72,24 @@ class EpicHandlerTest {
         assertEquals(200, response.statusCode());
 
         Epic retrievedEpic = gson.fromJson(response.body(), Epic.class);
-        assertEquals("Test Epic", retrievedEpic.getName());
+        assertEquals("1", retrievedEpic.getName());
+    }
+    @Test
+    public void testGetEpicSubtaskById() throws IOException, InterruptedException{
+        final Epic epic = new Epic("1", "1");
+        final int epicId = taskManager.addNewEpic(epic);
+        final SubTask subTask1 = new SubTask("2", "2", LocalDateTime.of
+                (2024, 10, 1, 2, 40),
+                Duration.ofMinutes(30), epicId);
+        taskManager.addNewSubTask(subTask1);
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8080/epics/" + epic.getId() + "/subtasks");
+        HttpRequest request = HttpRequest.newBuilder().uri(url).GET().build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, response.statusCode());
+
     }
 
     @Test
@@ -87,8 +109,8 @@ class EpicHandlerTest {
         List<Epic> epics = gson.fromJson(response.body(), new TypeToken<List<Epic>>() {
         }.getType());
         assertEquals(2, epics.size());
-        assertEquals("Epic 1", epics.get(0).getName());
-        assertEquals("Epic 2", epics.get(1).getName());
+        assertEquals("1", epics.get(0).getName());
+        assertEquals("2", epics.get(1).getName());
     }
 
     @Test
@@ -101,9 +123,9 @@ class EpicHandlerTest {
         HttpRequest request = HttpRequest.newBuilder().uri(url).DELETE().build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(204, response.statusCode());
+        assertEquals(200, response.statusCode());
 
-        List<Epic> epics = (List<Epic>) taskManager.getEpics();
+        List<Epic> epics = new ArrayList<>(taskManager.getEpics());
         assertEquals(0, epics.size());
     }
 }

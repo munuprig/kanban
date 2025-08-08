@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import interfaces.TaskManager;
 import models.Epic;
+import models.SubTask;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -49,6 +50,14 @@ public class EpicHandler extends BaseHttpHandler {
                 } else {
                     sendNotFound(exchange);
                 }
+            } else if (parts.length == 4) {
+                int epicId = Integer.parseInt(parts[2]);
+                Collection<SubTask> subTasks = taskManager.getEpicSubTasks(epicId);
+                if (subTasks != null) {
+                    sendText(exchange, 200, gson.toJson(subTasks));
+                } else {
+                    sendNotFound(exchange);
+                }
             } else {
                 sendNotFound(exchange);
             }
@@ -58,13 +67,11 @@ public class EpicHandler extends BaseHttpHandler {
     private void handlePostRequest(HttpExchange exchange) throws IOException {
         String requestBody = readRequestBody(exchange);
         Epic epic = gson.fromJson(requestBody, Epic.class);
-        int result = taskManager.addNewEpic(epic);
-        if (result == -1) {
-            sendHasOverlaps(exchange);
-        } else if (result == 0) {
-            sendNotFound(exchange);
-        } else {
+        taskManager.addNewEpic(epic);
+        if (taskManager.getEpics() != null) {
             sendText(exchange, 201, gson.toJson(epic));
+        } else {
+            sendHasOverlaps(exchange);
         }
     }
 
@@ -74,7 +81,7 @@ public class EpicHandler extends BaseHttpHandler {
         if (parts.length == 3 && parts[1].equals("epics")) {
             int epicId = Integer.parseInt(parts[2]);
             taskManager.deleteEpic(epicId);
-            sendText(exchange, 204, "");
+            sendText(exchange, 200, "");
         } else {
             sendNotFound(exchange);
         }

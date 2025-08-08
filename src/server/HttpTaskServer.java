@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.sun.net.httpserver.HttpServer;
 import handlers.*;
@@ -59,14 +60,25 @@ public class HttpTaskServer {
 
     public static class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
 
+        private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
         @Override
-        public void write(final JsonWriter jsonWriter, final LocalDateTime localDate) throws IOException {
-            jsonWriter.value(localDate.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        public void write(JsonWriter jsonWriter, LocalDateTime value) throws IOException {
+            if (value == null) {
+                jsonWriter.nullValue();
+            } else {
+                jsonWriter.value(value.format(formatter));
+            }
         }
 
         @Override
-        public LocalDateTime read(final JsonReader jsonReader) throws IOException {
-            return LocalDateTime.parse(jsonReader.nextString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        public LocalDateTime read(JsonReader jsonReader) throws IOException {
+            if (jsonReader.peek() == JsonToken.NULL) {
+                jsonReader.nextNull();
+                return null;
+            }
+            String dateStr = jsonReader.nextString();
+            return LocalDateTime.parse(dateStr, formatter);
         }
     }
 }
