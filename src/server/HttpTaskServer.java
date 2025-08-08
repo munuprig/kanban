@@ -2,19 +2,15 @@ package server;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
-import com.google.gson.stream.JsonWriter;
 import com.sun.net.httpserver.HttpServer;
 import handlers.*;
 import interfaces.TaskManager;
 import manager.Managers;
+import supportClass.LocalDateTimeAdapter;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class HttpTaskServer {
     private final TaskManager taskManager;
@@ -28,13 +24,14 @@ public class HttpTaskServer {
     public void start() throws IOException {
         server = HttpServer.create(new InetSocketAddress(PORT), 0);
         System.out.println("Server started on port " + PORT);
+        Gson gson = getGson();
 
         // Регистрируем обработчики для различных маршрутов
-        server.createContext("/tasks", new TaskHandler(taskManager, getGson()));
-        server.createContext("/subtasks", new SubtaskHandler(taskManager, getGson()));
-        server.createContext("/epics", new EpicHandler(taskManager, getGson()));
-        server.createContext("/history", new HistoryHandler(taskManager, getGson()));
-        server.createContext("/prioritized", new PrioritizedHandler(taskManager, getGson()));
+        server.createContext("/tasks", new TaskHandler(taskManager, gson));
+        server.createContext("/subtasks", new SubtaskHandler(taskManager, gson));
+        server.createContext("/epics", new EpicHandler(taskManager, gson));
+        server.createContext("/history", new HistoryHandler(taskManager, gson));
+        server.createContext("/prioritized", new PrioritizedHandler(taskManager, gson));
 
         server.start();
     }
@@ -56,29 +53,5 @@ public class HttpTaskServer {
     public static void main(String[] args) throws IOException {
         HttpTaskServer server = new HttpTaskServer(Managers.getDefault());
         server.start();
-    }
-
-    public static class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
-
-        private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-
-        @Override
-        public void write(JsonWriter jsonWriter, LocalDateTime value) throws IOException {
-            if (value == null) {
-                jsonWriter.nullValue();
-            } else {
-                jsonWriter.value(value.format(formatter));
-            }
-        }
-
-        @Override
-        public LocalDateTime read(JsonReader jsonReader) throws IOException {
-            if (jsonReader.peek() == JsonToken.NULL) {
-                jsonReader.nextNull();
-                return null;
-            }
-            String dateStr = jsonReader.nextString();
-            return LocalDateTime.parse(dateStr, formatter);
-        }
     }
 }
