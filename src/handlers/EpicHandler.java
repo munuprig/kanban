@@ -24,9 +24,6 @@ public class EpicHandler extends BaseHttpHandler {
             case "POST":
                 handlePostRequest(exchange);
                 break;
-            case "PUT":
-                handlePutRequest(exchange);
-                break;
             case "DELETE":
                 handleDeleteRequest(exchange);
                 break;
@@ -67,21 +64,6 @@ public class EpicHandler extends BaseHttpHandler {
             sendNotFound(exchange);
         } else {
             sendText(exchange, 201, gson.toJson(epic));
-        }
-    }
-
-    private void handlePutRequest(HttpExchange exchange) throws IOException {
-        String path = exchange.getRequestURI().getPath();
-        String[] parts = path.split("/");
-        if (parts.length == 3 && parts[1].equals("epics")) {
-            int epicId = Integer.parseInt(parts[2]);
-            String requestBody = readRequestBody(exchange);
-            Epic updatedEpic = gson.fromJson(requestBody, Epic.class);
-            updatedEpic.setId(epicId);
-            taskManager.updateEpic(updatedEpic);
-            sendText(exchange, 200, gson.toJson(updatedEpic));
-        } else {
-            sendNotFound(exchange);
         }
     }
 

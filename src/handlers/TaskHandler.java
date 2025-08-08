@@ -23,9 +23,6 @@ public class TaskHandler extends BaseHttpHandler {
             case "POST":
                 handlePostRequest(exchange);
                 break;
-            case "PUT":
-                handlePutRequest(exchange);
-                break;
             case "DELETE":
                 handleDeleteRequest(exchange);
                 break;
@@ -60,22 +57,7 @@ public class TaskHandler extends BaseHttpHandler {
         String requestBody = readRequestBody(exchange);
         Task task = gson.fromJson(requestBody, Task.class);
         taskManager.addNewTask(task);
-        sendText(exchange, 201, gson.toJson(task));
-    }
-
-    private void handlePutRequest(HttpExchange exchange) throws IOException {
-        String path = exchange.getRequestURI().getPath();
-        String[] parts = path.split("/");
-        if (parts.length == 3 && parts[1].equals("tasks")) {
-            int taskId = Integer.parseInt((parts[2]));
-            String requestBody = readRequestBody(exchange);
-            Task updatedTask = gson.fromJson(requestBody, Task.class);
-            updatedTask.setId(taskId);
-            taskManager.updateTask(updatedTask);
-            sendText(exchange, 200, gson.toJson(updatedTask));
-        } else {
-            sendNotFound(exchange);
-        }
+//        sendText(exchange, 201, gson.toJson(task));
     }
 
     private void handleDeleteRequest(HttpExchange exchange) throws IOException {

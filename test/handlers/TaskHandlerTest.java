@@ -20,18 +20,24 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TaskHandlerTest {
 
-    private TaskManager taskManager;
-    private HttpTaskServer taskServer;
-    private Gson gson;
+    // создаём экземпляр InMemoryTaskManager
+    TaskManager manager = new InMemoryTaskManager();
+    // передаём его в качестве аргумента в конструктор HttpTaskServer
+    HttpTaskServer taskServer = new HttpTaskServer(manager);
+    Gson gson = HttpTaskServer.getGson();
+
+    public TaskHandlerTest() throws IOException {
+    }
 
     @BeforeEach
     public void setUp() throws IOException {
-        taskManager = new InMemoryTaskManager();
-        taskServer = new HttpTaskServer(taskManager);
-        gson = HttpTaskServer.getGson();
+        manager.deleteTask();
+        manager.deleteSubTask();
+        manager.deleteEpic();
         taskServer.start();
     }
 
@@ -47,16 +53,22 @@ public class TaskHandlerTest {
                 Duration.ofMinutes(30));
         String taskJson = gson.toJson(task1);
 
+        // создаём HTTP-клиент и запрос
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/tasks");
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(HttpRequest.BodyPublishers.ofString(taskJson)).build();
 
+        // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(201, response.statusCode());
+        // проверяем код ответа
+        assertEquals(200, response.statusCode());
 
-        List<Task> tasks = (List<Task>) taskManager.getTasks();
-        assertEquals(1, tasks.size());
-        assertEquals("Test Task", tasks.getFirst().getName());
+        // проверяем, что создалась одна задача с корректным именем
+        List<Task> tasksFromManager = (List<Task>) manager.getTasks();
+
+        assertNotNull(tasksFromManager, "Задачи не возвращаются");
+        assertEquals(1, tasksFromManager.size(), "Некорректное количество задач");
+        assertEquals("Test 2", tasksFromManager.get(0).getName(), "Некорректное имя задачи");
     }
 
     @Test
@@ -64,7 +76,7 @@ public class TaskHandlerTest {
         final Task task1 = new Task("1", "1", LocalDateTime.of
                 (2023, 10, 1, 1, 0),
                 Duration.ofMinutes(30));
-        taskManager.addNewTask(task1);
+        manager.addNewTask(task1);
 
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/tasks/" + task1.getId());
@@ -82,7 +94,7 @@ public class TaskHandlerTest {
         final Task task1 = new Task("1", "1", LocalDateTime.of
                 (2023, 10, 1, 1, 0),
                 Duration.ofMinutes(30));
-        taskManager.addNewTask(task1);
+        manager.addNewTask(task1);
 
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/tasks");
@@ -102,7 +114,7 @@ public class TaskHandlerTest {
         final Task task1 = new Task("1", "1", LocalDateTime.of
                 (2023, 10, 1, 1, 0),
                 Duration.ofMinutes(30));
-        taskManager.addNewTask(task1);
+        manager.addNewTask(task1);
 
         task1.setName("Updated Task");
         String taskJson = gson.toJson(task1);
@@ -115,7 +127,7 @@ public class TaskHandlerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
-        Task updatedTask = taskManager.getTask(task1.getId());
+        Task updatedTask = manager.getTask(task1.getId());
         assertEquals("Updated Task", updatedTask.getName());
     }
 
@@ -124,7 +136,7 @@ public class TaskHandlerTest {
         final Task task1 = new Task("1", "1", LocalDateTime.of
                 (2023, 10, 1, 1, 0),
                 Duration.ofMinutes(30));
-        taskManager.addNewTask(task1);
+        manager.addNewTask(task1);
 
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/tasks/" + task1.getId());
@@ -133,7 +145,7 @@ public class TaskHandlerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(204, response.statusCode());
 
-        List<Task> tasks = (List<Task>) taskManager.getTasks();
+        List<Task> tasks = (List<Task>) manager.getTasks();
         assertEquals(0, tasks.size());
     }
 

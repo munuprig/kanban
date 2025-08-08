@@ -47,6 +47,7 @@ public class HistoryHandlerTest {
                 (2023, 10, 1, 1, 0),
                 Duration.ofMinutes(30));
         taskManager.addNewTask(task1);
+        String subtaskJson = gson.toJson(task1);
 
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/history");

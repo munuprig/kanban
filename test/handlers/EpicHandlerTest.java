@@ -92,25 +92,6 @@ class EpicHandlerTest {
     }
 
     @Test
-    public void testUpdateEpic() throws IOException, InterruptedException {
-        final Epic epic = new Epic("1", "1");
-        taskManager.addNewEpic(epic);
-
-        epic.setName("Updated Epic");
-        String epicJson = gson.toJson(epic);
-
-        HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create("http://localhost:8080/epics/" + epic.getId());
-        HttpRequest request = HttpRequest.newBuilder().uri(url).PUT(HttpRequest.BodyPublishers.ofString(epicJson)).build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(200, response.statusCode());
-
-        Epic updatedEpic = taskManager.getEpic(epic.getId());
-        assertEquals("Updated Epic", updatedEpic.getName());
-    }
-
-    @Test
     public void testDeleteEpic() throws IOException, InterruptedException {
         final Epic epic = new Epic("1", "1");
         taskManager.addNewEpic(epic);

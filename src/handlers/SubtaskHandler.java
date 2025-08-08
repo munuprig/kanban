@@ -23,9 +23,6 @@ public class SubtaskHandler extends BaseHttpHandler {
             case "POST":
                 handlePostRequest(exchange);
                 break;
-            case "PUT":
-                handlePutRequest(exchange);
-                break;
             case "DELETE":
                 handleDeleteRequest(exchange);
                 break;
@@ -66,21 +63,6 @@ public class SubtaskHandler extends BaseHttpHandler {
             sendNotFound(exchange);
         } else {
             sendText(exchange, 201, gson.toJson(subtask));
-        }
-    }
-
-    private void handlePutRequest(HttpExchange exchange) throws IOException {
-        String path = exchange.getRequestURI().getPath();
-        String[] parts = path.split("/");
-        if (parts.length == 3 && parts[1].equals("subtasks")) {
-            int subtaskId = Integer.parseInt(parts[2]);
-            String requestBody = readRequestBody(exchange);
-            SubTask updatedSubtask = gson.fromJson(requestBody, SubTask.class);
-            updatedSubtask.setId(subtaskId);
-            taskManager.updateSubTask(updatedSubtask);
-            sendText(exchange, 200, gson.toJson(updatedSubtask));
-        } else {
-            sendNotFound(exchange);
         }
     }
 
