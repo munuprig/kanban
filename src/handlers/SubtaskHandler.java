@@ -57,10 +57,10 @@ public class SubtaskHandler extends BaseHttpHandler {
     private void handlePostRequest(HttpExchange exchange) throws IOException {
         String requestBody = readRequestBody(exchange);
         SubTask subtask = gson.fromJson(requestBody, SubTask.class);
-        if (subtask.getId() == null){
+        if (subtask.getId() == null) {
             taskManager.addNewSubTask(subtask);
             sendText(exchange, 201, gson.toJson(subtask));
-        }else if (subtask.getId() >= 0){
+        } else if (subtask.getId() >= 0) {
             taskManager.updateSubTask(subtask);
             sendText(exchange, 201, gson.toJson(subtask));
         }
