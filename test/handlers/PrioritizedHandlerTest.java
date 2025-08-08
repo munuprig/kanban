@@ -1,4 +1,5 @@
 package handlers;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import interfaces.TaskManager;
@@ -53,7 +54,8 @@ public class PrioritizedHandlerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
-        List<Task> prioritizedTasks = gson.fromJson(response.body(), new TypeToken<List<Task>>(){}.getType());
+        List<Task> prioritizedTasks = gson.fromJson(response.body(), new TypeToken<List<Task>>() {
+        }.getType());
         assertNotNull(prioritizedTasks);
         assertEquals(1, prioritizedTasks.size());
         assertEquals("Test Task", prioritizedTasks.getFirst().getName());

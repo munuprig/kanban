@@ -55,7 +55,8 @@ public class HistoryHandlerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
-        List<Task> history = gson.fromJson(response.body(), new TypeToken<List<Task>>(){}.getType());
+        List<Task> history = gson.fromJson(response.body(), new TypeToken<List<Task>>() {
+        }.getType());
         assertNotNull(history);
         assertEquals(1, history.size());
         assertEquals("Test Task", history.getFirst().getName());

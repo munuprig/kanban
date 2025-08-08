@@ -91,7 +91,8 @@ public class TaskHandlerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
-        List<Task> tasks = gson.fromJson(response.body(), new TypeToken<List<Task>>(){}.getType());
+        List<Task> tasks = gson.fromJson(response.body(), new TypeToken<List<Task>>() {
+        }.getType());
         assertEquals(2, tasks.size());
         assertEquals("Task 1", tasks.getFirst().getName());
     }

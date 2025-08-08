@@ -7,7 +7,7 @@ import models.Task;
 import java.io.IOException;
 import java.util.List;
 
-public class PrioritizedHandler extends BaseHttpHandler{
+public class PrioritizedHandler extends BaseHttpHandler {
 
     public PrioritizedHandler(TaskManager taskManager) {
         super(taskManager);

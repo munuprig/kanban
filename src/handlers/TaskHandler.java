@@ -7,7 +7,7 @@ import models.Task;
 import java.io.IOException;
 import java.util.Collection;
 
-public class TaskHandler extends BaseHttpHandler{
+public class TaskHandler extends BaseHttpHandler {
 
     public TaskHandler(TaskManager taskManager) {
         super(taskManager);

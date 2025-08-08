@@ -98,7 +98,8 @@ class SubtaskHandlerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
-        List<SubTask> subtasks = gson.fromJson(response.body(), new TypeToken<List<SubTask>>(){}.getType());
+        List<SubTask> subtasks = gson.fromJson(response.body(), new TypeToken<List<SubTask>>() {
+        }.getType());
         assertEquals(1, subtasks.size());
         assertEquals("Subtask 1", subtasks.getFirst().getName());
     }
